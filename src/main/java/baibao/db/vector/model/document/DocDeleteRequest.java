@@ -3,24 +3,17 @@
  * BaiBao is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package baibao.db.vector.dto.document;
+package baibao.db.vector.model.document;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class DocFetchReq implements Serializable {
+public class DocDeleteRequest implements Serializable {
     private String collection;
     private List<String> ids;
-    private String configCode;
-
-    public DocFetchReq(List<String> ids) {
-
-        this.ids = ids;
-    }
-
-    public DocFetchReq() {
-
-    }
+    private Boolean deleteAll;
+    private Object  filter;
+    private String  configCode;
 
     public String getCollection() {
 
@@ -40,6 +33,26 @@ public class DocFetchReq implements Serializable {
     public void setIds(List<String> ids) {
 
         this.ids = ids;
+    }
+
+    public Boolean getDeleteAll() {
+
+        return deleteAll;
+    }
+
+    public void setDeleteAll(Boolean deleteAll) {
+
+        this.deleteAll = deleteAll;
+    }
+
+    public Object getFilter() {
+
+        return filter;
+    }
+
+    public void setFilter(Object filter) {
+
+        this.filter = filter;
     }
 
     public String getConfigCode() {

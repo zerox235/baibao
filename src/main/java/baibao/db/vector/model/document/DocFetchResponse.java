@@ -3,21 +3,21 @@
  * BaiBao is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package baibao.db.vector.dto.document;
+package baibao.db.vector.model.document;
 
 import java.io.Serializable;
 import java.util.Map;
 
-public class DocFetchResp implements Serializable {
+public class DocFetchResponse implements Serializable {
     private Map<String, DocData> documents;
     private String collection;
 
-    public DocFetchResp(String collection, Map<String, DocData> documents) {
+    public DocFetchResponse(String collection, Map<String, DocData> documents) {
         this.collection = collection;
         this.documents = documents;
     }
 
-    public DocFetchResp() {
+    public DocFetchResponse() {
 
     }
 

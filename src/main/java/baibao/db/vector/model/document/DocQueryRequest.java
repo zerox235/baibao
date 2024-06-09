@@ -3,12 +3,12 @@
  * BaiBao is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package baibao.db.vector.dto.document;
+package baibao.db.vector.model.document;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class DocQueryReq implements Serializable {
+public class DocQueryRequest implements Serializable {
     private String  collection;
     private String  id;
     private List<Object> vector;
