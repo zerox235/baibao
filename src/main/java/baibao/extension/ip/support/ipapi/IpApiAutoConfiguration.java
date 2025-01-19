@@ -6,11 +6,17 @@
 package baibao.extension.ip.support.ipapi;
 
 import kunlun.action.ActionUtils;
+import kunlun.cache.CacheUtils;
+import kunlun.cache.support.SimpleCache;
+import kunlun.cache.support.SimpleCacheConfig;
+import kunlun.data.ReferenceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Network physical address auto configuration.
@@ -22,13 +28,17 @@ public class IpApiAutoConfiguration implements InitializingBean, DisposableBean 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        IpApiIpActionHandler handler = new IpApiIpActionHandler();
         String actionName = "ip-query-ipapi";
-        ActionUtils.registerHandler(actionName, handler);
+        SimpleCacheConfig config = new SimpleCacheConfig(ReferenceType.SOFT, 3L, TimeUnit.DAYS);
+        CacheUtils.registerCache(actionName, new SimpleCache(config));
+        IpApiIpLocationAction action = new IpApiIpLocationAction();
+        action.setCache(CacheUtils.getCache(actionName));
+        ActionUtils.registerAction(actionName, action);
     }
 
     @Override
     public void destroy() throws Exception {
+
     }
 
 }

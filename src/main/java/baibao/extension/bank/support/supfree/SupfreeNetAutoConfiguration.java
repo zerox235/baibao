@@ -23,10 +23,9 @@ public class SupfreeNetAutoConfiguration implements InitializingBean, Disposable
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        SupfreeBankCardActionHandler handler = new SupfreeBankCardActionHandler();
         String actionName = "bank-card-supfree";
-        ActionUtils.registerHandler(actionName, handler);
-        ActionUtils.registerHandler("class:" + BankCardQuery.class.getName(), handler);
+        ActionUtils.registerAction(actionName, new SupfreeBankCardAction());
+        ActionUtils.registerShortcut(BankCardQuery.class, actionName);
     }
 
     @Override

@@ -6,8 +6,8 @@
 package baibao.message.webhook.support;
 
 import kunlun.codec.CodecUtils;
-import kunlun.crypto.Hmac;
-import kunlun.crypto.KeyUtils;
+import kunlun.crypto.CryptoUtils;
+import kunlun.crypto.digest.Hmac;
 import kunlun.data.json.JsonUtils;
 import kunlun.exception.ExceptionUtils;
 import kunlun.message.support.AbstractClassicMessageHandler;
@@ -33,6 +33,7 @@ import static kunlun.common.constant.Charsets.STR_UTF_8;
 import static kunlun.common.constant.Charsets.UTF_8;
 import static kunlun.common.constant.Numbers.FOUR;
 import static kunlun.common.constant.Numbers.TWO;
+import static kunlun.crypto.util.KeyUtils.parseSecretKey;
 
 /**
  * The ding talk robot.
@@ -64,11 +65,8 @@ public class DingTalkRobot extends AbstractClassicMessageHandler {
             String strToSign = timestamp + "\n" + secret;
             byte[] bytesToSign = strToSign.getBytes(UTF_8);
             byte[] secretBytes = secret.getBytes(UTF_8);
-            SecretKey secretKey =
-                    KeyUtils.parseSecretKey(HMAC_SHA256, secretBytes);
-            Hmac hmac = new Hmac(HMAC_SHA256);
-            hmac.setSecretKey(secretKey);
-            byte[] digest = hmac.digest(bytesToSign);
+            SecretKey key = parseSecretKey(HMAC_SHA256, secretBytes);
+            byte[] digest = CryptoUtils.digest(Hmac.Cfg.of(HMAC_SHA256, key), bytesToSign);
             String base64Str = CodecUtils.encodeToString(CodecUtils.BASE64, digest);
             return URLEncoder.encode(base64Str, STR_UTF_8);
         }
