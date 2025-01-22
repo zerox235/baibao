@@ -21,7 +21,7 @@ import static kunlun.net.http.HttpMethod.GET;
 import static kunlun.net.http.HttpMethod.POST;
 
 /**
- * The OpenAI AI Handler.
+ * The OpenAI AI action.
  * @see <a href="https://platform.openai.com/docs/api-reference">API REFERENCE</a>
  * @author Kahle
  */
