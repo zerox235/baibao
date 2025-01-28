@@ -9,7 +9,7 @@ import baibao.db.vector.model.document.*;
 import kunlun.convert.ConversionUtils;
 import kunlun.data.Dict;
 import kunlun.data.bean.BeanUtils;
-import kunlun.util.ObjectUtils;
+import kunlun.util.ObjUtils;
 
 import java.util.*;
 
@@ -46,8 +46,8 @@ public abstract class BasePineconeVectorDbHandler extends AbstractPineconeVector
                 Dict dict = Dict.of(BeanUtils.beanToMap(datum));
                 String id = dict.getString("id");
                 Object score = dict.get("score");
-                List<Object> values = ObjectUtils.cast(dict.get("values"));
-                Map<Object, Object> metadata = ObjectUtils.cast(dict.get("metadata"));
+                List<Object> values = ObjUtils.cast(dict.get("values"));
+                Map<Object, Object> metadata = ObjUtils.cast(dict.get("metadata"));
                 //
                 DocQueryData docQueryData = new DocQueryData(id, values, metadata);
                 docQueryData.setScore(score);
@@ -92,13 +92,13 @@ public abstract class BasePineconeVectorDbHandler extends AbstractPineconeVector
             DocFetchResponse result = new DocFetchResponse(
                     docFetch.getString("namespace"), documents);
             // Convert data.
-            Map<String, Object> vectors = ObjectUtils.cast(docFetch.get("vectors"));
+            Map<String, Object> vectors = ObjUtils.cast(docFetch.get("vectors"));
             vectors = vectors != null ? vectors : Collections.<String, Object>emptyMap();
             for (Map.Entry<String, Object> entry : vectors.entrySet()) {
                 Dict dict = Dict.of(BeanUtils.beanToMap(entry.getValue()));
                 String id = dict.getString("id");
-                List<Object> values = ObjectUtils.cast(dict.get("values"));
-                Map<Object, Object> metadata = ObjectUtils.cast(dict.get("metadata"));
+                List<Object> values = ObjUtils.cast(dict.get("values"));
+                Map<Object, Object> metadata = ObjUtils.cast(dict.get("metadata"));
                 documents.put(id, new DocData(id, values, metadata));
             }
             return result;

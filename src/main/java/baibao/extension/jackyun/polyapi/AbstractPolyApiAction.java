@@ -11,7 +11,7 @@ import kunlun.data.json.JsonUtils;
 import kunlun.net.http.HttpMethod;
 import kunlun.time.DateUtils;
 import kunlun.util.Assert;
-import kunlun.util.StringUtils;
+import kunlun.util.StrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +78,7 @@ public abstract class AbstractPolyApiAction extends AbstractJackYunAction {
         String calcSign = createSign(config.getAppSecret(), sortedMap);
         polyApiReq.setCalcSign(calcSign);
         // 判断签名是否相等
-        return StringUtils.equals(sign, calcSign);
+        return StrUtils.equals(sign, calcSign);
     }
 
     /**

@@ -12,7 +12,7 @@ import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.*;
 import kunlun.action.AbstractAction;
 import kunlun.exception.ExceptionUtils;
-import kunlun.util.StringUtils;
+import kunlun.util.StrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ public class MaxMindIpLocationAction extends AbstractAction {
             String language = ipQuery.getLanguage();
 //            String dbPath = "e:\\GeoLite2-City.mmdb";
             // 语言：de、pt-BR、fr、en、ru、zh-CN、es、ja
-            if (StringUtils.isBlank(language)) { language = "en"; }
+            if (StrUtils.isBlank(language)) { language = "en"; }
             InetAddress inetAddress = InetAddress.getByName(ipAddress);
             DatabaseReader dbReader = new DatabaseReader.Builder(providerDbPath).build();
             CityResponse response = dbReader.city(inetAddress);

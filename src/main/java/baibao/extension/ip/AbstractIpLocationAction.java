@@ -4,7 +4,7 @@ import kunlun.action.AbstractAction;
 import kunlun.cache.Cache;
 import kunlun.cache.support.NoCache;
 import kunlun.util.Assert;
-import kunlun.util.StringUtils;
+import kunlun.util.StrUtils;
 
 import java.util.concurrent.Callable;
 
@@ -13,7 +13,7 @@ public abstract class AbstractIpLocationAction extends AbstractAction {
     private Cache cache = new NoCache();
 
     protected boolean isPrivateAddr(String ipAddress) {
-        if (StringUtils.isBlank(ipAddress)) { return false; }
+        if (StrUtils.isBlank(ipAddress)) { return false; }
         if (ipAddress.startsWith("192.168.")) { return true; }
         if (ipAddress.startsWith("10.")) { return true; }
         for (int i = 16; i <= 31; i++) {

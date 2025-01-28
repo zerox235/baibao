@@ -14,7 +14,7 @@ import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpUtils;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.util.MapUtils;
-import kunlun.util.StringUtils;
+import kunlun.util.StrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,11 +33,11 @@ public class IpApiIpLocationAction extends AbstractIpLocationAction {
     @Override
     protected IpLocation doQuery(IpQuery ipQuery) {
         String ipAddress = ipQuery.getIpAddress(), language = ipQuery.getLanguage();
-        if (StringUtils.isBlank(language)) { language = "zh-CN"; }
+        if (StrUtils.isBlank(language)) { language = "zh-CN"; }
         // Invoke the API interface.
         String jsonString = HttpUtils.execute(SimpleRequest.of(HttpMethod.GET
                 , "http://ip-api.com/json/" + ipAddress + "?lang=" + language)).getBodyAsString();
-        if (StringUtils.isBlank(jsonString)) { return null; }
+        if (StrUtils.isBlank(jsonString)) { return null; }
         Dict dict = JsonUtils.parseObject(jsonString, Dict.class);
         if (MapUtils.isEmpty(dict)) { return null; }
         // Construct the result object.

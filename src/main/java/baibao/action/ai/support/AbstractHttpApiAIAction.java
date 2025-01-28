@@ -22,9 +22,9 @@ import kunlun.net.http.HttpUtils;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.net.http.support.SimpleResponse;
 import kunlun.util.Assert;
-import kunlun.util.CollectionUtils;
+import kunlun.util.CollUtils;
 import kunlun.util.MapUtils;
-import kunlun.util.StringUtils;
+import kunlun.util.StrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import static kunlun.common.constant.Numbers.*;
-import static kunlun.util.ObjectUtils.cast;
+import static kunlun.util.ObjUtils.cast;
 
 public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
     private static final Logger log = LoggerFactory.getLogger(AbstractHttpApiAIAction.class);
@@ -122,8 +122,8 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
             }
         }
         // Set request proxy.
-        if (StringUtils.isNotBlank(config.getProxyType()) &&
-                StringUtils.isNotBlank(config.getProxyHostname())) {
+        if (StrUtils.isNotBlank(config.getProxyType()) &&
+                StrUtils.isNotBlank(config.getProxyHostname())) {
             request.setProxy(tool.buildProxy(config));
         }
         // Record the log for input data.
@@ -330,7 +330,7 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
                 Message message = BeanUtils.mapToBean(messageMap, Message.class);
                 message.setToolCalls(new ArrayList<ToolCall>());
                 List<Map<String, Object>> toolCallMaps = cast(messageMap.get("tool_calls"));
-                if (CollectionUtils.isNotEmpty(toolCallMaps)) {
+                if (CollUtils.isNotEmpty(toolCallMaps)) {
                     for (Map<String, Object> toolCallMap : toolCallMaps) {
                         if (MapUtils.isEmpty(toolCallMap)) { continue; }
                         ToolCall toolCall = BeanUtils.mapToBean(toolCallMap, ToolCall.class);
