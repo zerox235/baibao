@@ -3,14 +3,14 @@
  * BaiBao is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package baibao.message.webhook.support;
+package baibao.extension.webhook.support.dingtalk;
 
+import kunlun.action.AbstractAction;
 import kunlun.codec.CodecUtils;
 import kunlun.crypto.CryptoUtils;
 import kunlun.crypto.digest.Hmac;
 import kunlun.data.json.JsonUtils;
 import kunlun.exception.ExceptionUtils;
-import kunlun.message.support.AbstractClassicMessageHandler;
 import kunlun.net.http.HttpClient;
 import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpResponse;
@@ -39,19 +39,18 @@ import static kunlun.crypto.util.KeyUtils.parseSecretKey;
  * The ding talk robot.
  * @author Kahle
  */
-@Deprecated
-public class DingTalkRobot extends AbstractClassicMessageHandler {
-    private static final Logger log = LoggerFactory.getLogger(DingTalkRobot.class);
+public class DingTalkRobotMsgAction extends AbstractAction {
+    private static final Logger log = LoggerFactory.getLogger(DingTalkRobotMsgAction.class);
     private final HttpClient httpClient;
     private final String webHook;
     private final String secret;
 
-    public DingTalkRobot(String webHook, String secret) {
+    public DingTalkRobotMsgAction(String webHook, String secret) {
 
         this(HttpUtils.getHttpClient(HttpUtils.getDefaultClientName()), webHook, secret);
     }
 
-    public DingTalkRobot(HttpClient httpClient, String webHook, String secret) {
+    public DingTalkRobotMsgAction(HttpClient httpClient, String webHook, String secret) {
         Assert.notNull(httpClient, "Parameter \"httpClient\" must not null. ");
         Assert.notBlank(webHook, "Parameter \"webHook\" must not blank. ");
         Assert.notBlank(secret, "Parameter \"secret\" must not blank. ");
@@ -144,18 +143,9 @@ public class DingTalkRobot extends AbstractClassicMessageHandler {
     }
 
     @Override
-    public Object execute(Object input, String name, Class<?> clazz) {
+    public Object execute(String strategy, Object input, Object[] arguments) {
         Assert.notNull(input, "Parameter \"input\" must not null. ");
-        Assert.notNull(clazz, "Parameter \"clazz\" must not null. ");
-        if ("send".equals(name)) {
-            isSupport(new Class[]{ String.class }, clazz);
-            return send(input);
-        }
-        else {
-            throw new UnsupportedOperationException(
-                    "Unsupported operation name \"" + name + "\"! "
-            );
-        }
+        return send(input);
     }
 
 }
