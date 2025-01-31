@@ -1,10 +1,10 @@
 package baibao.action.ai.support.zhipu;
 
 import baibao.action.ai.support.AbstractHttpApiAIAction;
-import kunlun.action.ai.model.ChatRequest;
-import kunlun.action.ai.model.ChatResponse;
-import kunlun.action.ai.model.EmbedRequest;
-import kunlun.action.ai.model.EmbedResponse;
+import kunlun.ai.model.ChatRequest;
+import kunlun.ai.model.ChatResponse;
+import kunlun.ai.model.EmbedRequest;
+import kunlun.ai.model.EmbedResponse;
 import kunlun.data.Dict;
 import kunlun.util.StrUtils;
 import org.slf4j.Logger;

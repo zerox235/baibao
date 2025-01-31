@@ -3,7 +3,7 @@ package baibao.action.ai.support.azure;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import kunlun.action.ActionUtils;
-import kunlun.action.ai.model.*;
+import kunlun.ai.model.*;
 import kunlun.core.function.Consumer;
 import kunlun.data.Dict;
 import kunlun.data.json.JsonUtils;
@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static kunlun.action.ai.model.Message.SYSTEM;
-import static kunlun.action.ai.model.Message.USER;
+import static kunlun.ai.model.Message.SYSTEM;
+import static kunlun.ai.model.Message.USER;
 import static kunlun.common.constant.Symbols.DOT;
 
 @Ignore

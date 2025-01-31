@@ -9,7 +9,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import kunlun.action.ai.AbstractAIAction;
-import kunlun.action.ai.model.*;
+import kunlun.ai.model.*;
 import kunlun.common.constant.Symbols;
 import kunlun.convert.ConversionUtils;
 import kunlun.core.function.Consumer;

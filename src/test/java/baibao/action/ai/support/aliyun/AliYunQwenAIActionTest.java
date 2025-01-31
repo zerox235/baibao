@@ -2,10 +2,10 @@ package baibao.action.ai.support.aliyun;
 
 import com.alibaba.fastjson.JSON;
 import kunlun.action.ActionUtils;
-import kunlun.action.ai.model.ChatRequest;
-import kunlun.action.ai.model.ChatResponse;
-import kunlun.action.ai.model.EmbedRequest;
-import kunlun.action.ai.model.EmbedResponse;
+import kunlun.ai.model.ChatRequest;
+import kunlun.ai.model.ChatResponse;
+import kunlun.ai.model.EmbedRequest;
+import kunlun.ai.model.EmbedResponse;
 import kunlun.core.function.Consumer;
 import kunlun.data.json.JsonUtils;
 import kunlun.data.json.support.FastJsonHandler;
@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static kunlun.action.ai.model.Message.SYSTEM;
-import static kunlun.action.ai.model.Message.USER;
+import static kunlun.ai.model.Message.SYSTEM;
+import static kunlun.ai.model.Message.USER;
 import static kunlun.common.constant.Symbols.DOT;
 
 @Ignore

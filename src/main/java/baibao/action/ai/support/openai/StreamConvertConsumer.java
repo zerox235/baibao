@@ -6,9 +6,9 @@
 package baibao.action.ai.support.openai;
 
 import cn.hutool.core.util.StrUtil;
-import kunlun.action.ai.model.ChatResponse;
-import kunlun.action.ai.model.Message;
-import kunlun.action.ai.model.Usage;
+import kunlun.ai.model.ChatResponse;
+import kunlun.ai.model.Message;
+import kunlun.ai.model.Usage;
 import kunlun.common.constant.Symbols;
 import kunlun.core.function.Consumer;
 import kunlun.data.Dict;
