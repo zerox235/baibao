@@ -11,5 +11,10 @@ package baibao.common.constant;
  */
 public class Actions {
 
+    /**
+     * The ip query by website(<a href="http://ip-api.com">ip-api.com</a>).
+     * @see <a href="http://ip-api.com/">IP Geolocation API</a>
+     */
+    public static final String IP_QUERY_01 = "ip-api";
 
 }

@@ -31,6 +31,12 @@ public class IpApiIpLocationAction extends AbstractIpLocationAction {
     private static final Logger log = LoggerFactory.getLogger(IpApiIpLocationAction.class);
 
     @Override
+    protected IpLocation build(String ipAddress, String address) {
+
+        return new IpApiIpLocation(ipAddress, address);
+    }
+
+    @Override
     protected IpLocation doQuery(IpQuery ipQuery) {
         String ipAddress = ipQuery.getIpAddress(), language = ipQuery.getLanguage();
         if (StrUtils.isBlank(language)) { language = "zh-CN"; }

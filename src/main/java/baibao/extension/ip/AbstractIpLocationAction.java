@@ -32,6 +32,8 @@ public abstract class AbstractIpLocationAction extends AbstractAction {
         this.cache = cache;
     }
 
+    protected abstract IpLocation build(String ipAddress, String address);
+
     protected abstract IpLocation doQuery(IpQuery ipQuery);
 
     @Override
@@ -41,10 +43,9 @@ public abstract class AbstractIpLocationAction extends AbstractAction {
         Assert.isSupport(input.getClass(), Boolean.TRUE, IpQuery.class);
         final IpQuery ipQuery = (IpQuery) input;
         // Judge whether it is a private address.
-//        if (isPrivateAddr(ipQuery.getIpAddress())) {
-//            IpLocation location = new IpLocation(ipQuery.getIpAddress(), PRIVATE_ADDR);
-//            return BeanUtils.beanToBean(location, (Class<?>) type);
-//        } // todo actionUtils
+        if (isPrivateAddr(ipQuery.getIpAddress())) {
+            return build(ipQuery.getIpAddress(), PRIVATE_ADDR);
+        }
         // Query the geo address of the IP (preferably from the cache).
         return getCache().get(ipQuery.getIpAddress(), new Callable<IpLocation>() {
             @Override
