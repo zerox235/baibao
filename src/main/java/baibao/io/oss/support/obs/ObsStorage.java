@@ -16,8 +16,8 @@ import kunlun.io.oss.OssInfo;
 import kunlun.io.oss.OssObject;
 import kunlun.io.oss.support.AbstractOssStorage;
 import kunlun.io.oss.support.OssObjectImpl;
+import kunlun.io.util.IoUtil;
 import kunlun.util.Assert;
-import kunlun.util.CloseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +83,7 @@ public class ObsStorage extends AbstractOssStorage {
             throw ExceptionUtils.wrap(e);
         }
         finally {
-            CloseUtils.closeQuietly(inputStream);
+            IoUtil.closeQuietly(inputStream);
         }
     }
 
