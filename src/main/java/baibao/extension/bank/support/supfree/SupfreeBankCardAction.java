@@ -12,8 +12,8 @@ import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpResponse;
 import kunlun.net.http.HttpUtils;
 import kunlun.net.http.support.SimpleRequest;
-import kunlun.util.CollUtils;
-import kunlun.util.StrUtils;
+import kunlun.util.CollUtil;
+import kunlun.util.StrUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -31,7 +31,7 @@ public class SupfreeBankCardAction extends AbstractAction {
     private static final Logger log = LoggerFactory.getLogger(SupfreeBankCardAction.class);
 
     private String cutoutValue(String data) {
-        if (StrUtils.isBlank(data)) { return null; }
+        if (StrUtil.isBlank(data)) { return null; }
         int indexOf = data.indexOf("：");
         if (indexOf != -1 && indexOf < data.length()) {
             data = data.substring(indexOf + 1);
@@ -53,7 +53,7 @@ public class SupfreeBankCardAction extends AbstractAction {
             Document document = Jsoup.parse(html);
 
             Elements cdivElements = document.getElementsByClass("cdiv");
-            if (CollUtils.isEmpty(cdivElements)) { return null; }
+            if (CollUtil.isEmpty(cdivElements)) { return null; }
             if (cdivElements.size() < TWO) { return null; }
             Element cdivElement = cdivElements.get(ONE);
             log.info(
@@ -62,7 +62,7 @@ public class SupfreeBankCardAction extends AbstractAction {
                     , cdivElement.text()
             );
             Elements pElements = cdivElement.getElementsByTag("p");
-            if (CollUtils.isEmpty(pElements)) { return null; }
+            if (CollUtil.isEmpty(pElements)) { return null; }
             if (pElements.size() < SEVEN) { return null; }
 
             String issuerIdentificationNumber = cutoutValue(pElements.get(ZERO).text());

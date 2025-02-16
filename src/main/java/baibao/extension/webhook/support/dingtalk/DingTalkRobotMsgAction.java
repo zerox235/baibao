@@ -17,8 +17,8 @@ import kunlun.net.http.HttpResponse;
 import kunlun.net.http.HttpUtils;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.util.Assert;
-import kunlun.util.CollUtils;
-import kunlun.util.StrUtils;
+import kunlun.util.CollUtil;
+import kunlun.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,9 +75,9 @@ public class DingTalkRobotMsgAction extends AbstractAction {
     }
 
     protected void at(Map<String, Object> data, boolean atAll, List<String> atList) {
-        if (!atAll && CollUtils.isEmpty(atList)) { return; }
+        if (!atAll && CollUtil.isEmpty(atList)) { return; }
         Map<String, Object> atMap = new HashMap<String, Object>(FOUR);
-        if (CollUtils.isNotEmpty(atList)) {
+        if (CollUtil.isNotEmpty(atList)) {
             atMap.put("atMobiles", atList);
         }
         atMap.put("isAtAll", atAll);
@@ -118,7 +118,7 @@ public class DingTalkRobotMsgAction extends AbstractAction {
             request.addHeader("Content-Type", "application/json");
             if (message instanceof String) {
                 String str = String.valueOf(message);
-                boolean normal = StrUtils.isNotBlank(str)
+                boolean normal = StrUtil.isNotBlank(str)
                         && str.startsWith("{") && str.endsWith("}");
                 if (normal) {
                     log.info("DingTalk robot send \"{}\". ", message);

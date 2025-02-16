@@ -15,7 +15,7 @@ import kunlun.data.Dict;
 import kunlun.data.bean.BeanUtils;
 import kunlun.data.json.JsonUtils;
 import kunlun.util.Assert;
-import kunlun.util.ObjUtils;
+import kunlun.util.ObjUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -69,7 +69,7 @@ public class StreamConvertConsumer implements Consumer<Object> {
             Dict    choiceDict = Dict.of(BeanUtils.beanToMap(choice));
             String  object = choiceDict.getString("finish_reason");
             Integer index = choiceDict.getInteger("index");
-            Map<String, Object> deltaMap = ObjUtils.cast(choiceDict.get("delta"));
+            Map<String, Object> deltaMap = ObjUtil.cast(choiceDict.get("delta"));
             Message message = BeanUtils.mapToBean(deltaMap, Message.class);
 //            message.setToolCalls(deltaMap.get("tool_calls"));
             builder.addChoice(index, message, object);

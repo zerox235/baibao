@@ -7,7 +7,6 @@ package baibao.action.ai.support;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import kunlun.action.ai.AbstractAIAction;
 import kunlun.ai.model.*;
 import kunlun.common.constant.Symbols;
@@ -22,9 +21,9 @@ import kunlun.net.http.HttpUtils;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.net.http.support.SimpleResponse;
 import kunlun.util.Assert;
-import kunlun.util.CollUtils;
+import kunlun.util.CollUtil;
 import kunlun.util.MapUtils;
-import kunlun.util.StrUtils;
+import kunlun.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import static kunlun.common.constant.Numbers.*;
-import static kunlun.util.ObjUtils.cast;
+import static kunlun.util.ObjUtil.cast;
 
 public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
     private static final Logger log = LoggerFactory.getLogger(AbstractHttpApiAIAction.class);
@@ -122,8 +121,8 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
             }
         }
         // Set request proxy.
-        if (StrUtils.isNotBlank(config.getProxyType()) &&
-                StrUtils.isNotBlank(config.getProxyHostname())) {
+        if (StrUtil.isNotBlank(config.getProxyType()) &&
+                StrUtil.isNotBlank(config.getProxyHostname())) {
             request.setProxy(tool.buildProxy(config));
         }
         // Record the log for input data.
@@ -330,7 +329,7 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
                 Message message = BeanUtils.mapToBean(messageMap, Message.class);
                 message.setToolCalls(new ArrayList<ToolCall>());
                 List<Map<String, Object>> toolCallMaps = cast(messageMap.get("tool_calls"));
-                if (CollUtils.isNotEmpty(toolCallMaps)) {
+                if (CollUtil.isNotEmpty(toolCallMaps)) {
                     for (Map<String, Object> toolCallMap : toolCallMaps) {
                         if (MapUtils.isEmpty(toolCallMap)) { continue; }
                         ToolCall toolCall = BeanUtils.mapToBean(toolCallMap, ToolCall.class);

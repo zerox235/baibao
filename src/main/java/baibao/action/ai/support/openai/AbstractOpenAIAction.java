@@ -12,7 +12,7 @@ import kunlun.ai.model.EmbedRequest;
 import kunlun.ai.model.EmbedResponse;
 import kunlun.data.Dict;
 import kunlun.util.Assert;
-import kunlun.util.StrUtils;
+import kunlun.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public abstract class AbstractOpenAIAction extends AbstractHttpApiAIAction {
 
     @Override
     public Object execute(String strategy, Object input, Object[] arguments) {
-        if (StrUtils.isBlank(strategy) || AIMethods.CHAT.equals(strategy)) {
+        if (StrUtil.isBlank(strategy) || AIMethods.CHAT.equals(strategy)) {
             return chat((ChatRequest) input);
         }
         else if (AIMethods.EMBEDDINGS.equals(strategy)) {

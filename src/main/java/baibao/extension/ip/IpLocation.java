@@ -6,7 +6,7 @@
 package baibao.extension.ip;
 
 import kunlun.data.geo.Geolocation;
-import kunlun.util.StrUtils;
+import kunlun.util.StrUtil;
 
 import java.io.Serializable;
 
@@ -64,13 +64,13 @@ public class IpLocation extends Geolocation implements Serializable {
         String district = getDistrict();
         String street = getStreet();
         String address = getAddress();
-        return (StrUtils.isNotBlank(country) ? country + BLANK_SPACE : EMPTY_STRING)
-                + (StrUtils.isNotBlank(region) ? region + BLANK_SPACE : EMPTY_STRING)
-                + (StrUtils.isNotBlank(city) ? city + BLANK_SPACE : EMPTY_STRING)
-                + (StrUtils.isNotBlank(district) ? district + BLANK_SPACE : EMPTY_STRING)
-                + (StrUtils.isNotBlank(street) ? street + BLANK_SPACE : EMPTY_STRING)
-                + (StrUtils.isNotBlank(address) ? address + BLANK_SPACE : EMPTY_STRING)
-                + (StrUtils.isNotBlank(isp) ? isp : EMPTY_STRING);
+        return (StrUtil.isNotBlank(country) ? country + BLANK_SPACE : EMPTY_STRING)
+                + (StrUtil.isNotBlank(region) ? region + BLANK_SPACE : EMPTY_STRING)
+                + (StrUtil.isNotBlank(city) ? city + BLANK_SPACE : EMPTY_STRING)
+                + (StrUtil.isNotBlank(district) ? district + BLANK_SPACE : EMPTY_STRING)
+                + (StrUtil.isNotBlank(street) ? street + BLANK_SPACE : EMPTY_STRING)
+                + (StrUtil.isNotBlank(address) ? address + BLANK_SPACE : EMPTY_STRING)
+                + (StrUtil.isNotBlank(isp) ? isp : EMPTY_STRING);
     }
 
 }

@@ -8,7 +8,7 @@ package baibao.extension.jackyun;
 import kunlun.net.http.HttpMethod;
 import kunlun.time.DateUtils;
 import kunlun.util.Assert;
-import kunlun.util.StrUtils;
+import kunlun.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +34,10 @@ public abstract class AbstractJackYunOpenApiAction extends AbstractJackYunAction
         Assert.notBlank(config.getAppSecret(), "Parameter \"config.appSecret\" must not blank. ");
         Assert.notBlank(config.getAddress(), "Parameter \"config.address\" must not blank. ");
         Assert.notBlank(config.getAppKey(), "Parameter \"config.appKey\" must not blank. ");
-        if (StrUtils.isBlank(config.getContentType())) {
+        if (StrUtil.isBlank(config.getContentType())) {
             config.setContentType("json");
         }
-        if (StrUtils.isBlank(config.getVersion())) {
+        if (StrUtil.isBlank(config.getVersion())) {
             config.setVersion("v1.0");
         }
     }
