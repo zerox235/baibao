@@ -13,7 +13,7 @@ import kunlun.data.json.JsonUtils;
 import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpUtils;
 import kunlun.net.http.support.SimpleRequest;
-import kunlun.util.MapUtils;
+import kunlun.util.MapUtil;
 import kunlun.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class IpApiIpLocationAction extends AbstractIpLocationAction {
                 , "http://ip-api.com/json/" + ipAddress + "?lang=" + language)).getBodyAsString();
         if (StrUtil.isBlank(jsonString)) { return null; }
         Dict dict = JsonUtils.parseObject(jsonString, Dict.class);
-        if (MapUtils.isEmpty(dict)) { return null; }
+        if (MapUtil.isEmpty(dict)) { return null; }
         // Construct the result object.
         IpApiIpLocation ipApiIpLocation = new IpApiIpLocation();
         ipApiIpLocation.setIpAddress(ipAddress);

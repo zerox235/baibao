@@ -6,7 +6,6 @@
 package baibao.action.ai.support;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.map.MapUtil;
 import kunlun.action.ai.AbstractAIAction;
 import kunlun.ai.model.*;
 import kunlun.common.constant.Symbols;
@@ -22,7 +21,7 @@ import kunlun.net.http.support.SimpleRequest;
 import kunlun.net.http.support.SimpleResponse;
 import kunlun.util.Assert;
 import kunlun.util.CollUtil;
-import kunlun.util.MapUtils;
+import kunlun.util.MapUtil;
 import kunlun.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -331,7 +330,7 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
                 List<Map<String, Object>> toolCallMaps = cast(messageMap.get("tool_calls"));
                 if (CollUtil.isNotEmpty(toolCallMaps)) {
                     for (Map<String, Object> toolCallMap : toolCallMaps) {
-                        if (MapUtils.isEmpty(toolCallMap)) { continue; }
+                        if (MapUtil.isEmpty(toolCallMap)) { continue; }
                         ToolCall toolCall = BeanUtils.mapToBean(toolCallMap, ToolCall.class);
                         Map<String, Object> functionMap = cast(toolCallMap.get("function"));
                         toolCall.setFunction(BeanUtils.mapToBean(functionMap, ToolCall.Function.class));
