@@ -9,7 +9,7 @@ import kunlun.action.ActionUtils;
 import kunlun.crypto.CryptoUtils;
 import kunlun.file.Csv;
 import kunlun.io.util.IoUtil;
-import kunlun.util.ClassLoaderUtils;
+import kunlun.util.ClassLoaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -32,7 +32,7 @@ public class DeviceAutoConfiguration implements InitializingBean, DisposableBean
         Class<?> callingClass = DeviceAutoConfiguration.class;
         String resourceName = "device_info.data";
         InputStream inputStream =
-                ClassLoaderUtils.getResourceAsStream(resourceName, callingClass);
+                ClassLoaderUtil.getResourceAsStream(resourceName, callingClass);
         byte[] byteArray = IoUtil.readBytes(inputStream);
         byte[] decrypt = CryptoUtils.decrypt(byteArray);
         Csv csv = new Csv();

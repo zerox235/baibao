@@ -17,7 +17,7 @@ import kunlun.data.tuple.Triple;
 import kunlun.db.AbstractDbHandler;
 import kunlun.db.vector.VectorDbHandler;
 import kunlun.net.http.HttpMethod;
-import kunlun.util.ArgumentUtils;
+import kunlun.util.ArgumentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +93,7 @@ public abstract class AbstractPineconeVectorDbHandler extends AbstractDbHandler 
 
     @Override
     public Object execute(Object[] arguments) {
-        Triple<Object, String, Class<?>> triple = ArgumentUtils.parseToObjStrCls(arguments);
+        Triple<Object, String, Class<?>> triple = ArgumentUtil.parseToObjStrCls(arguments);
         Object input = triple.getLeft();
         String strategy = triple.getMiddle();
         Class<?> clazz = triple.getRight();

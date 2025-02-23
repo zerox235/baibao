@@ -11,7 +11,7 @@ import kunlun.action.AbstractAction;
 import kunlun.data.bean.BeanUtils;
 import kunlun.file.Csv;
 import kunlun.util.Assert;
-import kunlun.util.RecombineUtils;
+import kunlun.util.RecombineUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ public class FileBasedDeviceAction extends AbstractAction {
 
     public FileBasedDeviceAction(Csv csv) {
         List<Device> deviceList = BeanUtils.mapToBeanInList(csv.toMapList(), Device.class);
-        Map<String, Device> modelMap = RecombineUtils.listToMapBean(deviceList, "model");
+        Map<String, Device> modelMap = RecombineUtil.listToMapBean(deviceList, "model");
         deviceMap = Collections.unmodifiableMap(modelMap);
     }
 
