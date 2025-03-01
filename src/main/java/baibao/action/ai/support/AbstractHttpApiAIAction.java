@@ -5,18 +5,17 @@
 
 package baibao.action.ai.support;
 
-import cn.hutool.core.bean.BeanUtil;
 import kunlun.action.ai.AbstractAIAction;
 import kunlun.ai.model.*;
 import kunlun.common.constant.Symbols;
-import kunlun.convert.ConversionUtils;
+import kunlun.convert.ConversionUtil;
 import kunlun.core.function.Consumer;
 import kunlun.data.Dict;
-import kunlun.data.bean.BeanUtils;
-import kunlun.data.json.JsonUtils;
-import kunlun.exception.ExceptionUtils;
+import kunlun.data.bean.BeanUtil;
+import kunlun.data.json.JsonUtil;
+import kunlun.exception.ExceptionUtil;
 import kunlun.net.http.HttpMethod;
-import kunlun.net.http.HttpUtils;
+import kunlun.net.http.HttpUtil;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.net.http.support.SimpleResponse;
 import kunlun.util.Assert;
@@ -68,7 +67,7 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
             }
             // Last line.
             consumer.accept(line + Symbols.LINE_FEED);
-        } catch (Exception e) { throw ExceptionUtils.wrap(e); }
+        } catch (Exception e) { throw ExceptionUtil.wrap(e); }
     }
 
     /**
@@ -106,7 +105,7 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
         }
         else if (httpType == FOUR) {
             request.addHeader("Content-Type", "application/json");
-            request.setBody(JsonUtils.toJsonString(data));
+            request.setBody(JsonUtil.toJsonString(data));
         }
         else if (httpType == ONE) {
             // no content
@@ -129,23 +128,23 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
         // Processing response.
         if (!stream) {
             // Non stream.
-            SimpleResponse response = (SimpleResponse) HttpUtils.execute(request);
+            SimpleResponse response = (SimpleResponse) HttpUtil.execute(request);
             String body = response.getBodyAsString();
             tool.logResponse(debug, httpData.getUrl(), body);
-            Dict respData = JsonUtils.parseObject(body, Dict.class);
+            Dict respData = JsonUtil.parseObject(body, Dict.class);
             tool.checkResult(respData);
             return respData;
         }
         // Is stream, but content-type no event-stream.
         // Most of the time it's because something went wrong.
         request.setStream(true);
-        SimpleResponse response = (SimpleResponse) HttpUtils.execute(request);
+        SimpleResponse response = (SimpleResponse) HttpUtil.execute(request);
         Charset charset = Charset.forName(response.getCharset());
         String contentType = response.getFirstHeader("Content-Type");
         if (StrUtil.isNotBlank(contentType) && !contentType.contains("event-stream")) {
             String body = response.getBodyAsString();
             tool.logResponse(debug, httpData.getUrl(), body);
-            Dict respData = JsonUtils.parseObject(body, Dict.class);
+            Dict respData = JsonUtil.parseObject(body, Dict.class);
             tool.checkResult(respData);
             return respData;
         }
@@ -285,12 +284,12 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
 
         public Dict toDict(Object obj) {
             if (obj instanceof Dict) { return (Dict) obj; }
-            return Dict.of(BeanUtils.beanToMap(obj));
+            return Dict.of(BeanUtil.beanToMap(obj));
         }
 
         public void logRequest(Boolean debug, String url, Object data) {
             if (debug != null && debug) {
-                String json = JsonUtils.toJsonString(data);
+                String json = JsonUtil.toJsonString(data);
                 log.info("The http request url \"{}\" input is \"{}\".", url, json);
             }
         }
@@ -325,22 +324,22 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
                 String  reason = choiceDict.getString("finish_reason");
                 Integer index = choiceDict.getInteger("index");
                 Map<String, Object> messageMap = cast(choiceDict.get("message"));
-                Message message = BeanUtils.mapToBean(messageMap, Message.class);
+                Message message = BeanUtil.mapToBean(messageMap, Message.class);
                 message.setToolCalls(new ArrayList<ToolCall>());
                 List<Map<String, Object>> toolCallMaps = cast(messageMap.get("tool_calls"));
                 if (CollUtil.isNotEmpty(toolCallMaps)) {
                     for (Map<String, Object> toolCallMap : toolCallMaps) {
                         if (MapUtil.isEmpty(toolCallMap)) { continue; }
-                        ToolCall toolCall = BeanUtils.mapToBean(toolCallMap, ToolCall.class);
+                        ToolCall toolCall = BeanUtil.mapToBean(toolCallMap, ToolCall.class);
                         Map<String, Object> functionMap = cast(toolCallMap.get("function"));
-                        toolCall.setFunction(BeanUtils.mapToBean(functionMap, ToolCall.Function.class));
+                        toolCall.setFunction(BeanUtil.mapToBean(functionMap, ToolCall.Function.class));
                         message.getToolCalls().add(toolCall);
                     }
                 }
                 builder.addChoice(index, message, reason);
             }
             // Convert usage.
-            Dict usageDict = Dict.of(BeanUtils.beanToMap(respDict.get("usage")));
+            Dict usageDict = Dict.of(BeanUtil.beanToMap(respDict.get("usage")));
             builder.setUsage(Usage.Builder.of()
                     .setPromptTokens(usageDict.getInteger("prompt_tokens"))
                     .setCompletionTokens(usageDict.getInteger("completion_tokens"))
@@ -375,14 +374,14 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
                 List embedding = (List) datumDict.get("embedding");
                 for (Object obj : embedding) {
                     if (obj == null) { continue; }
-                    embeddingFl.add(ConversionUtils.convert(obj, Float.class));
+                    embeddingFl.add(ConversionUtil.convert(obj, Float.class));
                 }
                 // Create EmbedData.
                 Integer index = datumDict.getInteger("index");
                 builder.getData().add(new EmbedData(index, embeddingFl));
             }
             // Convert usage.
-            Dict usageDict = Dict.of(BeanUtils.beanToMap(respDict.get("usage")));
+            Dict usageDict = Dict.of(BeanUtil.beanToMap(respDict.get("usage")));
             builder.setUsage(Usage.Builder.of()
                     .setPromptTokens(usageDict.getInteger("prompt_tokens"))
                     .setCompletionTokens(usageDict.getInteger("completion_tokens"))
@@ -409,7 +408,7 @@ public abstract class AbstractHttpApiAIAction extends AbstractAIAction {
             Object errorObj = result.get(ERROR_KEY);
             if (errorObj == null) { return; }
             Dict error = Dict.of(errorObj instanceof Map
-                    ? (Map<?, ?>) errorObj : BeanUtils.beanToMap(errorObj));
+                    ? (Map<?, ?>) errorObj : BeanUtil.beanToMap(errorObj));
             if (MapUtil.isEmpty(error)) { return; }
             String message = error.getString("message");
             String code = error.getString("code");

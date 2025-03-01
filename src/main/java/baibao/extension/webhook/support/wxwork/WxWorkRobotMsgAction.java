@@ -7,11 +7,11 @@ package baibao.extension.webhook.support.wxwork;
 
 import kunlun.action.AbstractAction;
 import kunlun.data.Dict;
-import kunlun.data.json.JsonUtils;
-import kunlun.exception.ExceptionUtils;
+import kunlun.data.json.JsonUtil;
+import kunlun.exception.ExceptionUtil;
 import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpResponse;
-import kunlun.net.http.HttpUtils;
+import kunlun.net.http.HttpUtil;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.util.Assert;
 import org.slf4j.Logger;
@@ -42,15 +42,15 @@ public class WxWorkRobotMsgAction extends AbstractAction {
 
             Dict dict = Dict.of("msgtype", "text").set("text", Dict.of("content", message));
 
-            request.setBody(JsonUtils.toJsonString(dict));
-            log.info("WxWorkMessageRobot send \"{}\". ", JsonUtils.toJsonString(request));
-            HttpResponse httpResponse = HttpUtils.execute(request);
+            request.setBody(JsonUtil.toJsonString(dict));
+            log.info("WxWorkMessageRobot send \"{}\". ", JsonUtil.toJsonString(request));
+            HttpResponse httpResponse = HttpUtil.execute(request);
             String bodyAsString = httpResponse.getBodyAsString();
             log.info("WxWorkMessageRobot receive \"{}\". ", bodyAsString);
             return bodyAsString;
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
     }
 

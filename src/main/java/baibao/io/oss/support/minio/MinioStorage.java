@@ -9,7 +9,7 @@ import io.minio.*;
 import io.minio.errors.ErrorResponseException;
 import io.minio.messages.ErrorResponse;
 import io.minio.messages.Item;
-import kunlun.exception.ExceptionUtils;
+import kunlun.exception.ExceptionUtil;
 import kunlun.io.oss.OssBase;
 import kunlun.io.oss.OssInfo;
 import kunlun.io.oss.OssObject;
@@ -68,10 +68,10 @@ public class MinioStorage extends AbstractOssStorage {
             ErrorResponse errorResponse = e.errorResponse();
             String code = errorResponse.code();
             if ("NoSuchKey".equals(code)) { return false; }
-            else { throw ExceptionUtils.wrap(e); }
+            else { throw ExceptionUtil.wrap(e); }
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
     }
 
@@ -88,7 +88,7 @@ public class MinioStorage extends AbstractOssStorage {
                     .build());
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
         if (objectResponse == null) { return null; }
         OssObjectImpl ossObject = new OssObjectImpl();
@@ -115,7 +115,7 @@ public class MinioStorage extends AbstractOssStorage {
             return buildOssInfo(bucketName, objectKey, null, objectWriteResponse);
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
         finally {
             IoUtil.closeQuietly(inputStream);
@@ -135,7 +135,7 @@ public class MinioStorage extends AbstractOssStorage {
             return null;
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
     }
 

@@ -9,8 +9,8 @@ import com.obs.services.ObsClient;
 import com.obs.services.model.ObjectListing;
 import com.obs.services.model.ObsObject;
 import com.obs.services.model.PutObjectResult;
-import kunlun.data.bean.BeanUtils;
-import kunlun.exception.ExceptionUtils;
+import kunlun.data.bean.BeanUtil;
+import kunlun.exception.ExceptionUtil;
 import kunlun.io.oss.OssBase;
 import kunlun.io.oss.OssInfo;
 import kunlun.io.oss.OssObject;
@@ -64,7 +64,7 @@ public class ObsStorage extends AbstractOssStorage {
         String objectKey = ossBase.getObjectKey();
         ObsObject obsObject = obsClient.getObject(bucketName, objectKey);
         if (obsObject == null) { return null; }
-        return BeanUtils.beanToBean(obsObject, OssObjectImpl.class);
+        return BeanUtil.beanToBean(obsObject, OssObjectImpl.class);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ObsStorage extends AbstractOssStorage {
                     putObjectResult.getObjectUrl(), putObjectResult);
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
         finally {
             IoUtil.closeQuietly(inputStream);

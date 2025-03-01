@@ -9,7 +9,7 @@ import baibao.extension.aliyun.nls.model.TokenResponse;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.nls.client.AccessToken;
 import kunlun.action.AbstractAction;
-import kunlun.exception.ExceptionUtils;
+import kunlun.exception.ExceptionUtil;
 
 import java.io.Serializable;
 
@@ -62,7 +62,7 @@ public abstract class AbstractAliYunNlsSdkAction extends AbstractAction {
         //
         try { accessToken.apply(); }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
         //
         String token = accessToken.getToken();

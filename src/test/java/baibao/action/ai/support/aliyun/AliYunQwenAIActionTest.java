@@ -1,13 +1,13 @@
 package baibao.action.ai.support.aliyun;
 
 import com.alibaba.fastjson.JSON;
-import kunlun.action.ActionUtils;
+import kunlun.action.ActionUtil;
 import kunlun.ai.model.ChatRequest;
 import kunlun.ai.model.ChatResponse;
 import kunlun.ai.model.EmbedRequest;
 import kunlun.ai.model.EmbedResponse;
 import kunlun.core.function.Consumer;
-import kunlun.data.json.JsonUtils;
+import kunlun.data.json.JsonUtil;
 import kunlun.data.json.support.FastJsonHandler;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,8 +26,8 @@ public class AliYunQwenAIActionTest {
     private static final String chatModel = "qwen-max-0919";
 
     static {
-        JsonUtils.registerHandler("default", new FastJsonHandler());
-        ActionUtils.registerAction(handlerName, new AbstractAliYunQwenAIAction() {
+        JsonUtil.registerHandler("default", new FastJsonHandler());
+        ActionUtil.registerAction(handlerName, new AbstractAliYunQwenAIAction() {
             @Override
             protected Config getConfig(String strategy, Object input) {
                 Config config = new Config();
@@ -46,7 +46,7 @@ public class AliYunQwenAIActionTest {
                 .addMessage(USER, "what is AI?")
                 .build();
         String command = handlerName + DOT + "chat";
-        ChatResponse response = ActionUtils.execute(command, request);
+        ChatResponse response = ActionUtil.execute(command, request);
         log.info("result: {}", JSON.toJSONString(response, Boolean.TRUE));
     }
 
@@ -65,7 +65,7 @@ public class AliYunQwenAIActionTest {
                     }})
                 .build();
         String command = handlerName + DOT + "chat";
-        ActionUtils.execute(command, request);
+        ActionUtil.execute(command, request);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class AliYunQwenAIActionTest {
                 .setInput("this is a test")
                 .build();
         String command = handlerName + DOT + "embeddings";
-        EmbedResponse execute = ActionUtils.execute(command, request);
+        EmbedResponse execute = ActionUtil.execute(command, request);
         log.info("result: {}", JSON.toJSONString(execute, Boolean.TRUE));
     }
 

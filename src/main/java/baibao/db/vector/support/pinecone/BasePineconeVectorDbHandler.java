@@ -6,9 +6,9 @@
 package baibao.db.vector.support.pinecone;
 
 import baibao.db.vector.model.document.*;
-import kunlun.convert.ConversionUtils;
+import kunlun.convert.ConversionUtil;
 import kunlun.data.Dict;
-import kunlun.data.bean.BeanUtils;
+import kunlun.data.bean.BeanUtil;
 import kunlun.util.ObjUtil;
 
 import java.util.*;
@@ -43,7 +43,7 @@ public abstract class BasePineconeVectorDbHandler extends AbstractPineconeVector
             List matches = (List) docQuery.get("matches");
             matches = matches != null ? matches : Collections.emptyList();
             for (Object datum : matches) {
-                Dict dict = Dict.of(BeanUtils.beanToMap(datum));
+                Dict dict = Dict.of(BeanUtil.beanToMap(datum));
                 String id = dict.getString("id");
                 Object score = dict.get("score");
                 List<Object> values = ObjUtil.cast(dict.get("values"));
@@ -95,7 +95,7 @@ public abstract class BasePineconeVectorDbHandler extends AbstractPineconeVector
             Map<String, Object> vectors = ObjUtil.cast(docFetch.get("vectors"));
             vectors = vectors != null ? vectors : Collections.<String, Object>emptyMap();
             for (Map.Entry<String, Object> entry : vectors.entrySet()) {
-                Dict dict = Dict.of(BeanUtils.beanToMap(entry.getValue()));
+                Dict dict = Dict.of(BeanUtil.beanToMap(entry.getValue()));
                 String id = dict.getString("id");
                 List<Object> values = ObjUtil.cast(dict.get("values"));
                 Map<Object, Object> metadata = ObjUtil.cast(dict.get("metadata"));
@@ -131,7 +131,7 @@ public abstract class BasePineconeVectorDbHandler extends AbstractPineconeVector
         // Conversion output parameter.
         if (Number.class.isAssignableFrom(clazz)) {
             Dict docUpsert = (Dict) super.docUpsert(data, clazz);
-            return ConversionUtils.convert(docUpsert.get("upsertedCount"), clazz);
+            return ConversionUtil.convert(docUpsert.get("upsertedCount"), clazz);
         }
         else { return super.docUpsert(data, clazz); }
     }

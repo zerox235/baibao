@@ -7,11 +7,11 @@ package baibao.extension.jackyun;
 
 import kunlun.action.support.AbstractAutoAction;
 import kunlun.data.Dict;
-import kunlun.data.json.JsonUtils;
-import kunlun.exception.ExceptionUtils;
+import kunlun.data.json.JsonUtil;
+import kunlun.exception.ExceptionUtil;
 import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpResponse;
-import kunlun.net.http.HttpUtils;
+import kunlun.net.http.HttpUtil;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.util.Assert;
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public abstract class AbstractJackYunAction extends AbstractAutoAction {
             return hexValue.toString();
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class AbstractJackYunAction extends AbstractAutoAction {
         Assert.isInstanceOf(Map.class, data, "Parameter \"data\" must is instance of map. ");
         SimpleRequest request = SimpleRequest.of(method, url);
         request.addParameters((Map<?, ?>) data);
-        HttpResponse response = HttpUtils.execute(request);
+        HttpResponse response = HttpUtil.execute(request);
         return response.getBodyAsString();
     }
 
@@ -85,7 +85,7 @@ public abstract class AbstractJackYunAction extends AbstractAutoAction {
             return String.valueOf(input);
         }
         else {
-            return JsonUtils.toJsonString(input);
+            return JsonUtil.toJsonString(input);
         }
     }
 
@@ -95,13 +95,13 @@ public abstract class AbstractJackYunAction extends AbstractAutoAction {
             return result;
         }
         else if (Dict.class.isAssignableFrom(clazz)) {
-            return JsonUtils.parseObject(result, Dict.class);
+            return JsonUtil.parseObject(result, Dict.class);
         }
         else if (Map.class.isAssignableFrom(clazz)) {
-            return JsonUtils.parseObject(result, Map.class);
+            return JsonUtil.parseObject(result, Map.class);
         }
         else {
-            return JsonUtils.parseObject(result, clazz);
+            return JsonUtil.parseObject(result, clazz);
         }
     }
 

@@ -12,8 +12,8 @@ import kunlun.ai.model.Usage;
 import kunlun.common.constant.Symbols;
 import kunlun.core.function.Consumer;
 import kunlun.data.Dict;
-import kunlun.data.bean.BeanUtils;
-import kunlun.data.json.JsonUtils;
+import kunlun.data.bean.BeanUtil;
+import kunlun.data.json.JsonUtil;
 import kunlun.util.Assert;
 import kunlun.util.ObjUtil;
 
@@ -38,7 +38,7 @@ public class StreamConvertConsumer implements Consumer<Object> {
         String line = param != null ? String.valueOf(param) : null;
         if (needConvert(line)) {
             ChatResponse chatResp = convertLine(line);
-            line = "data: " + JsonUtils.toJsonString(chatResp) + Symbols.LINE_FEED;
+            line = "data: " + JsonUtil.toJsonString(chatResp) + Symbols.LINE_FEED;
         }
         getStreamConsumer().accept(line);
     }
@@ -57,7 +57,7 @@ public class StreamConvertConsumer implements Consumer<Object> {
         Assert.isFalse("data: [DONE]".equals(line), "line must not equals \"data: [DONE]\". ");
         String substring = line.substring("data: ".length());
 
-        Dict respDict = JsonUtils.parseObject(substring, Dict.class);
+        Dict respDict = JsonUtil.parseObject(substring, Dict.class);
         // Create ChatResp.
         ChatResponse.Builder builder = ChatResponse.Builder.of();
         builder.setId(respDict.getString("id"));
@@ -66,16 +66,16 @@ public class StreamConvertConsumer implements Consumer<Object> {
         @SuppressWarnings("rawtypes")
         List choices = (List) respDict.get("choices");
         for (Object choice : choices) {
-            Dict    choiceDict = Dict.of(BeanUtils.beanToMap(choice));
+            Dict    choiceDict = Dict.of(BeanUtil.beanToMap(choice));
             String  object = choiceDict.getString("finish_reason");
             Integer index = choiceDict.getInteger("index");
             Map<String, Object> deltaMap = ObjUtil.cast(choiceDict.get("delta"));
-            Message message = BeanUtils.mapToBean(deltaMap, Message.class);
+            Message message = BeanUtil.mapToBean(deltaMap, Message.class);
 //            message.setToolCalls(deltaMap.get("tool_calls"));
             builder.addChoice(index, message, object);
         }
         // Convert usage.
-        Dict usageDict = Dict.of(BeanUtils.beanToMap(respDict.get("usage")));
+        Dict usageDict = Dict.of(BeanUtil.beanToMap(respDict.get("usage")));
         builder.setUsage(Usage.Builder.of()
                 .setPromptTokens(usageDict.getInteger("prompt_tokens"))
                 .setCompletionTokens(usageDict.getInteger("completion_tokens"))

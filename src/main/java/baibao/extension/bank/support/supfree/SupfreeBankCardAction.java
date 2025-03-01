@@ -10,7 +10,7 @@ import baibao.extension.bank.BankCardQuery;
 import kunlun.action.AbstractAction;
 import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpResponse;
-import kunlun.net.http.HttpUtils;
+import kunlun.net.http.HttpUtil;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.util.CollUtil;
 import kunlun.util.StrUtil;
@@ -48,7 +48,7 @@ public class SupfreeBankCardAction extends AbstractAction {
             SimpleRequest request = new SimpleRequest();
             request.setMethod(HttpMethod.GET);
             request.setUrl("https://bankcard.supfree.net/tongku.asp?cardno=" + bankCardNumber);
-            HttpResponse response = HttpUtils.execute(request);
+            HttpResponse response = HttpUtil.execute(request);
             String html = response.getBodyAsString("GB2312");
             Document document = Jsoup.parse(html);
 

@@ -1,11 +1,11 @@
 package baibao.db.vector.support.pinecone;
 
-import kunlun.data.Dict;
-import kunlun.data.json.JsonUtils;
-import kunlun.data.json.support.FastJsonHandler;
-import kunlun.generator.id.IdUtils;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
+import kunlun.data.Dict;
+import kunlun.data.json.JsonUtil;
+import kunlun.data.json.support.FastJsonHandler;
+import kunlun.generator.id.IdUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,14 +27,14 @@ public class PineconeVectorDbHandlerTest {
 
     static {
 
-        JsonUtils.registerHandler("default", new FastJsonHandler());
+        JsonUtil.registerHandler("default", new FastJsonHandler());
     }
 
     @Test
     public void testUpsert() {
         Dict input = Dict.of();
         // 向量ID，必填
-        input.set("id", IdUtils.nextString("uuid"));
+        input.set("id", IdUtil.nextString("uuid"));
         // 向量数据列表，必填，长度必须是1536
         List<Float> values = new ArrayList<Float>();
         for (int i = 0; i < 1536; i++) {

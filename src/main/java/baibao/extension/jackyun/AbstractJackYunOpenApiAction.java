@@ -6,7 +6,7 @@
 package baibao.extension.jackyun;
 
 import kunlun.net.http.HttpMethod;
-import kunlun.time.DateUtils;
+import kunlun.time.DateUtil;
 import kunlun.util.Assert;
 import kunlun.util.StrUtil;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public abstract class AbstractJackYunOpenApiAction extends AbstractJackYunAction
         sortedMap.put("appkey", config.getAppKey());
         sortedMap.put("version", config.getVersion());
         sortedMap.put("contenttype", config.getContentType());
-        sortedMap.put("timestamp", DateUtils.format("yyyy-MM-dd HH:mm:ss"));
+        sortedMap.put("timestamp", DateUtil.format("yyyy-MM-dd HH:mm:ss"));
         sortedMap.put("bizcontent", String.valueOf(bizData));
         // 生成签名
         String sign = createSign(config.getAppSecret(), sortedMap);

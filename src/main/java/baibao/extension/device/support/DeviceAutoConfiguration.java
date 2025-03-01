@@ -5,8 +5,8 @@
 
 package baibao.extension.device.support;
 
-import kunlun.action.ActionUtils;
-import kunlun.crypto.CryptoUtils;
+import kunlun.action.ActionUtil;
+import kunlun.crypto.CryptoUtil;
 import kunlun.file.Csv;
 import kunlun.io.util.IoUtil;
 import kunlun.util.ClassLoaderUtil;
@@ -34,11 +34,11 @@ public class DeviceAutoConfiguration implements InitializingBean, DisposableBean
         InputStream inputStream =
                 ClassLoaderUtil.getResourceAsStream(resourceName, callingClass);
         byte[] byteArray = IoUtil.readBytes(inputStream);
-        byte[] decrypt = CryptoUtils.decrypt(byteArray);
+        byte[] decrypt = CryptoUtil.decrypt(byteArray);
         Csv csv = new Csv();
         csv.setCharset(STR_UTF_8);
         csv.readFromByteArray(decrypt);
-        ActionUtils.registerAction("device-query", new FileBasedDeviceAction(csv));
+        ActionUtil.registerAction("device-query", new FileBasedDeviceAction(csv));
     }
 
     @Override

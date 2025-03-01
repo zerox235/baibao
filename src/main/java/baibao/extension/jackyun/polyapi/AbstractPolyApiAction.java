@@ -7,9 +7,9 @@ package baibao.extension.jackyun.polyapi;
 
 import baibao.extension.jackyun.AbstractJackYunAction;
 import kunlun.data.Dict;
-import kunlun.data.json.JsonUtils;
+import kunlun.data.json.JsonUtil;
 import kunlun.net.http.HttpMethod;
-import kunlun.time.DateUtils;
+import kunlun.time.DateUtil;
 import kunlun.util.Assert;
 import kunlun.util.StrUtil;
 import org.slf4j.Logger;
@@ -118,8 +118,8 @@ public abstract class AbstractPolyApiAction extends AbstractJackYunAction {
         SortedMap<String, String> sortedMap = new TreeMap<String, String>();
         sortedMap.put("appkey", config.getAppKey());
         sortedMap.put("token", config.getToken());
-        sortedMap.put("data", JsonUtils.toJsonString(dataDict));
-        sortedMap.put("timestamp", DateUtils.format("yyyy-MM-dd HH:mm:ss"));
+        sortedMap.put("data", JsonUtil.toJsonString(dataDict));
+        sortedMap.put("timestamp", DateUtil.format("yyyy-MM-dd HH:mm:ss"));
         // 生成签名
         String sign = createSign(config.getAppSecret(), sortedMap);
         sortedMap.put("sign", sign);

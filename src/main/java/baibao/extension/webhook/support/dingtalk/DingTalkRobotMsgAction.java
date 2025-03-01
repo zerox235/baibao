@@ -6,15 +6,15 @@
 package baibao.extension.webhook.support.dingtalk;
 
 import kunlun.action.AbstractAction;
-import kunlun.codec.CodecUtils;
-import kunlun.crypto.CryptoUtils;
+import kunlun.codec.CodecUtil;
+import kunlun.crypto.CryptoUtil;
 import kunlun.crypto.digest.Hmac;
-import kunlun.data.json.JsonUtils;
-import kunlun.exception.ExceptionUtils;
+import kunlun.data.json.JsonUtil;
+import kunlun.exception.ExceptionUtil;
 import kunlun.net.http.HttpClient;
 import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpResponse;
-import kunlun.net.http.HttpUtils;
+import kunlun.net.http.HttpUtil;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.util.Assert;
 import kunlun.util.CollUtil;
@@ -33,7 +33,7 @@ import static kunlun.common.constant.Charsets.STR_UTF_8;
 import static kunlun.common.constant.Charsets.UTF_8;
 import static kunlun.common.constant.Numbers.FOUR;
 import static kunlun.common.constant.Numbers.TWO;
-import static kunlun.crypto.util.KeyUtils.parseSecretKey;
+import static kunlun.crypto.util.KeyUtil.parseSecretKey;
 
 /**
  * The ding talk robot.
@@ -47,7 +47,7 @@ public class DingTalkRobotMsgAction extends AbstractAction {
 
     public DingTalkRobotMsgAction(String webHook, String secret) {
 
-        this(HttpUtils.getHttpClient(HttpUtils.getDefaultClientName()), webHook, secret);
+        this(HttpUtil.getHttpClient(HttpUtil.getDefaultClientName()), webHook, secret);
     }
 
     public DingTalkRobotMsgAction(HttpClient httpClient, String webHook, String secret) {
@@ -65,12 +65,12 @@ public class DingTalkRobotMsgAction extends AbstractAction {
             byte[] bytesToSign = strToSign.getBytes(UTF_8);
             byte[] secretBytes = secret.getBytes(UTF_8);
             SecretKey key = parseSecretKey(HMAC_SHA256, secretBytes);
-            byte[] digest = CryptoUtils.digest(Hmac.Cfg.of(HMAC_SHA256, key), bytesToSign);
-            String base64Str = CodecUtils.encodeToString(CodecUtils.BASE64, digest);
+            byte[] digest = CryptoUtil.digest(Hmac.Cfg.of(HMAC_SHA256, key), bytesToSign);
+            String base64Str = CodecUtil.encodeToString(CodecUtil.BASE64, digest);
             return URLEncoder.encode(base64Str, STR_UTF_8);
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
     }
 
@@ -92,7 +92,7 @@ public class DingTalkRobotMsgAction extends AbstractAction {
         markdownMap.put("text", text);
         data.put("markdown", markdownMap);
         at(data, atAll, atList);
-        return send(JsonUtils.toJsonString(data));
+        return send(JsonUtil.toJsonString(data));
     }
 
     public Object sendText(String content, boolean atAll, List<String> atList) {
@@ -102,7 +102,7 @@ public class DingTalkRobotMsgAction extends AbstractAction {
         textMap.put("content", content);
         data.put("text", textMap);
         at(data, atAll, atList);
-        return send(JsonUtils.toJsonString(data));
+        return send(JsonUtil.toJsonString(data));
     }
 
     public Object send(Object message) {
@@ -129,8 +129,8 @@ public class DingTalkRobotMsgAction extends AbstractAction {
                 }
             }
             else {
-                log.info("DingTalk robot send \"{}\". ", JsonUtils.toJsonString(request));
-                request.setBody(JsonUtils.toJsonString(message));
+                log.info("DingTalk robot send \"{}\". ", JsonUtil.toJsonString(request));
+                request.setBody(JsonUtil.toJsonString(message));
             }
             HttpResponse httpResponse = httpClient.execute(request);
             String bodyAsString = httpResponse.getBodyAsString();
@@ -138,7 +138,7 @@ public class DingTalkRobotMsgAction extends AbstractAction {
             return bodyAsString;
         }
         catch (Exception e) {
-            throw ExceptionUtils.wrap(e);
+            throw ExceptionUtil.wrap(e);
         }
     }
 

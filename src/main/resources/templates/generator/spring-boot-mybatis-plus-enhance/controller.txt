@@ -4,11 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import kunlun.common.Page;
 import kunlun.common.Result;
 import kunlun.data.Dict;
-import kunlun.data.bean.BeanUtils;
+import kunlun.data.bean.BeanUtil;
 import kunlun.data.validation.support.javax.group.Create;
 import kunlun.data.validation.support.javax.group.Query;
 import kunlun.data.validation.support.javax.group.Update;
-import kunlun.exception.util.VerifyUtils;
+import kunlun.exception.util.VerifyUtil;
 #if($useLombok)
 import lombok.extern.slf4j.Slf4j;
 #end

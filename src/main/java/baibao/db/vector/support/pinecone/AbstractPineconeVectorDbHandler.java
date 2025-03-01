@@ -11,8 +11,8 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import kunlun.data.Dict;
-import kunlun.data.bean.BeanUtils;
-import kunlun.data.json.JsonUtils;
+import kunlun.data.bean.BeanUtil;
+import kunlun.data.json.JsonUtil;
 import kunlun.data.tuple.Triple;
 import kunlun.db.AbstractDbHandler;
 import kunlun.db.vector.VectorDbHandler;
@@ -60,10 +60,10 @@ public abstract class AbstractPineconeVectorDbHandler extends AbstractDbHandler 
         request.header("Api-Key", config.getApiKey());
 
         if (HttpMethod.POST.equals(method)) {
-            request.body(JsonUtils.toJsonString(input));
+            request.body(JsonUtil.toJsonString(input));
         }
         else {
-            request.form(BeanUtils.beanToMap(input));
+            request.form(BeanUtil.beanToMap(input));
         }
 
 
@@ -72,7 +72,7 @@ public abstract class AbstractPineconeVectorDbHandler extends AbstractDbHandler 
         }
 
         if (debug != null && debug) {
-            log.info("Http pinecone input: {}", JsonUtils.toJsonString(input));
+            log.info("Http pinecone input: {}", JsonUtil.toJsonString(input));
         }
         HttpResponse response = request.execute();
         String responseBody = response.body();
@@ -81,7 +81,7 @@ public abstract class AbstractPineconeVectorDbHandler extends AbstractDbHandler 
         }
 
         if (StrUtil.isBlank(responseBody)) { return null; }
-        Dict respData = JsonUtils.parseObject(responseBody, Dict.class);
+        Dict respData = JsonUtil.parseObject(responseBody, Dict.class);
 
         String message = respData.getString("message");
         Integer code = respData.getInteger("code");
@@ -140,7 +140,7 @@ public abstract class AbstractPineconeVectorDbHandler extends AbstractDbHandler 
     public Object docFetch(Object condition, Class<?> clazz) {
         Config config = getConfig(condition);
         String url = config.getHost() + "/vectors/fetch";
-        return doHttp(HttpMethod.GET, url, BeanUtils.beanToMap(condition), config);
+        return doHttp(HttpMethod.GET, url, BeanUtil.beanToMap(condition), config);
     }
 
     public Object docUpdate(Object data, Class<?> clazz) {

@@ -6,7 +6,7 @@
 package baibao.extension.bank.support.supfree;
 
 import baibao.extension.bank.BankCardQuery;
-import kunlun.action.ActionUtils;
+import kunlun.action.ActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -24,8 +24,8 @@ public class SupfreeNetAutoConfiguration implements InitializingBean, Disposable
     @Override
     public void afterPropertiesSet() throws Exception {
         String actionName = "bank-card-supfree";
-        ActionUtils.registerAction(actionName, new SupfreeBankCardAction());
-        ActionUtils.registerShortcut(BankCardQuery.class, actionName);
+        ActionUtil.registerAction(actionName, new SupfreeBankCardAction());
+        ActionUtil.registerShortcut(BankCardQuery.class, actionName);
     }
 
     @Override

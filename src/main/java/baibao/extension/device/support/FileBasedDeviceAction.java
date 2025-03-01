@@ -8,7 +8,7 @@ package baibao.extension.device.support;
 import baibao.extension.device.Device;
 import baibao.extension.device.DeviceQuery;
 import kunlun.action.AbstractAction;
-import kunlun.data.bean.BeanUtils;
+import kunlun.data.bean.BeanUtil;
 import kunlun.file.Csv;
 import kunlun.util.Assert;
 import kunlun.util.RecombineUtil;
@@ -22,7 +22,7 @@ public class FileBasedDeviceAction extends AbstractAction {
     private final Map<String, Device> deviceMap;
 
     public FileBasedDeviceAction(Csv csv) {
-        List<Device> deviceList = BeanUtils.mapToBeanInList(csv.toMapList(), Device.class);
+        List<Device> deviceList = BeanUtil.mapToBeanInList(csv.toMapList(), Device.class);
         Map<String, Device> modelMap = RecombineUtil.listToMapBean(deviceList, "model");
         deviceMap = Collections.unmodifiableMap(modelMap);
     }

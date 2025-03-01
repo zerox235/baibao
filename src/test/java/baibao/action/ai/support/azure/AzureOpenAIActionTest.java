@@ -2,11 +2,11 @@ package baibao.action.ai.support.azure;
 
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
-import kunlun.action.ActionUtils;
+import kunlun.action.ActionUtil;
 import kunlun.ai.model.*;
 import kunlun.core.function.Consumer;
 import kunlun.data.Dict;
-import kunlun.data.json.JsonUtils;
+import kunlun.data.json.JsonUtil;
 import kunlun.data.json.support.FastJsonHandler;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,8 +26,8 @@ public class AzureOpenAIActionTest {
     private static final String chatModel = "gpt-4";
 
     static {
-        JsonUtils.registerHandler("default", new FastJsonHandler());
-        ActionUtils.registerAction(handlerName, new AbstractAzureOpenAIAction() {
+        JsonUtil.registerHandler("default", new FastJsonHandler());
+        ActionUtil.registerAction(handlerName, new AbstractAzureOpenAIAction() {
             @Override
             protected Config getConfig(String strategy, Object input) {
                 Config config = new Config();
@@ -48,7 +48,7 @@ public class AzureOpenAIActionTest {
                 .addMessage(USER, "what is AI?")
                 .build();
         String command = handlerName + DOT + "chat";
-        ChatResponse response = ActionUtils.execute(command, request);
+        ChatResponse response = ActionUtil.execute(command, request);
         log.info("result: {}", JSON.toJSONString(response, Boolean.TRUE));
     }
 
@@ -67,7 +67,7 @@ public class AzureOpenAIActionTest {
                     }})
                 .build();
         String command = handlerName + DOT + "chat";
-        ActionUtils.execute(command, request);
+        ActionUtil.execute(command, request);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class AzureOpenAIActionTest {
                 .setInput("this is a test")
                 .build();
         String command = handlerName + DOT + "embeddings";
-        EmbedResponse execute = ActionUtils.execute(command, request);
+        EmbedResponse execute = ActionUtil.execute(command, request);
         log.info("result: {}", JSON.toJSONString(execute, Boolean.TRUE));
     }
 
@@ -95,7 +95,7 @@ public class AzureOpenAIActionTest {
                         .build())
                 .build();
         String command = handlerName + DOT + "chat";
-        ChatResponse response = ActionUtils.execute(command, request);
+        ChatResponse response = ActionUtil.execute(command, request);
         log.info("result: {}", JSON.toJSONString(response, Boolean.TRUE));
     }
 

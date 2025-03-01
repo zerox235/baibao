@@ -1,7 +1,7 @@
 package baibao.extension.splitter.support;
 
 import cn.hutool.core.io.FileUtil;
-import kunlun.action.ActionUtils;
+import kunlun.action.ActionUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ public class SimpleTextSplitterTest {
     private static final String handlerName = "simple-text-splitter";
 
     static {
-        ActionUtils.registerAction(handlerName, new AbstractSimpleTextSplitter() {
+        ActionUtil.registerAction(handlerName, new AbstractSimpleTextSplitter() {
             @Override
             protected Config getConfig(Object input, String operation, Class<?> clazz) {
 
@@ -28,7 +28,7 @@ public class SimpleTextSplitterTest {
     @Test
     public void test1() {
         String text = FileUtil.readString("F:\\test\\test.txt", Charset.forName("utf-8"));
-        List<String> execute = ActionUtils.execute(handlerName, text);
+        List<String> execute = ActionUtil.execute(handlerName, text);
         for (String str : execute) {
             log.info("chunk: {}", str);
         }

@@ -9,9 +9,9 @@ import baibao.extension.ip.AbstractIpLocationAction;
 import baibao.extension.ip.IpLocation;
 import baibao.extension.ip.IpQuery;
 import kunlun.data.Dict;
-import kunlun.data.json.JsonUtils;
+import kunlun.data.json.JsonUtil;
 import kunlun.net.http.HttpMethod;
-import kunlun.net.http.HttpUtils;
+import kunlun.net.http.HttpUtil;
 import kunlun.net.http.support.SimpleRequest;
 import kunlun.util.MapUtil;
 import kunlun.util.StrUtil;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
-import static kunlun.convert.ConversionUtils.convert;
+import static kunlun.convert.ConversionUtil.convert;
 
 /**
  * Network physical address provider by website(http://ip-api.com).
@@ -41,10 +41,10 @@ public class IpApiIpLocationAction extends AbstractIpLocationAction {
         String ipAddress = ipQuery.getIpAddress(), language = ipQuery.getLanguage();
         if (StrUtil.isBlank(language)) { language = "zh-CN"; }
         // Invoke the API interface.
-        String jsonString = HttpUtils.execute(SimpleRequest.of(HttpMethod.GET
+        String jsonString = HttpUtil.execute(SimpleRequest.of(HttpMethod.GET
                 , "http://ip-api.com/json/" + ipAddress + "?lang=" + language)).getBodyAsString();
         if (StrUtil.isBlank(jsonString)) { return null; }
-        Dict dict = JsonUtils.parseObject(jsonString, Dict.class);
+        Dict dict = JsonUtil.parseObject(jsonString, Dict.class);
         if (MapUtil.isEmpty(dict)) { return null; }
         // Construct the result object.
         IpApiIpLocation ipApiIpLocation = new IpApiIpLocation();

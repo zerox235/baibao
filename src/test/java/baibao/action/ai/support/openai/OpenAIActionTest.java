@@ -2,14 +2,14 @@ package baibao.action.ai.support.openai;
 
 import cn.hutool.core.io.FileUtil;
 import com.alibaba.fastjson.JSON;
-import kunlun.action.ActionUtils;
+import kunlun.action.ActionUtil;
 import kunlun.ai.model.ChatRequest;
 import kunlun.ai.model.ChatResponse;
 import kunlun.ai.model.EmbedRequest;
 import kunlun.ai.model.EmbedResponse;
 import kunlun.core.function.Consumer;
 import kunlun.data.Dict;
-import kunlun.data.json.JsonUtils;
+import kunlun.data.json.JsonUtil;
 import kunlun.data.json.support.FastJsonHandler;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,8 +30,8 @@ public class OpenAIActionTest {
     private static final String chatModel = "gpt-3.5-turbo-0613";
 
     static {
-        JsonUtils.registerHandler("default", new FastJsonHandler());
-        ActionUtils.registerAction(handlerName, new AbstractOpenAIAction() {
+        JsonUtil.registerHandler("default", new FastJsonHandler());
+        ActionUtil.registerAction(handlerName, new AbstractOpenAIAction() {
             @Override
             protected Config getConfig(String strategy, Object input) {
                 Config config = new Config();
@@ -53,7 +53,7 @@ public class OpenAIActionTest {
                 .addMessage("user", "what is AI?")
                 .build();
         String command = handlerName + DOT + "chat";
-        ChatResponse resp = ActionUtils.execute(command, req);
+        ChatResponse resp = ActionUtil.execute(command, req);
         log.info("result: {}", JSON.toJSONString(resp, Boolean.TRUE));
     }
 
@@ -74,14 +74,14 @@ public class OpenAIActionTest {
 //                        String substring = line.substring("data: ".length());
 //                        Dict dict = JSON.parseObject(substring, Dict.class);
 //                        Array choices = Array.of((List) dict.get("choices"));
-//                        Object delta = Dict.of(BeanUtils.beanToMap(choices.get(0))).get("delta");
-//                        String content = Dict.of(BeanUtils.beanToMap(delta)).getString("content");
+//                        Object delta = Dict.of(BeanUtil.beanToMap(choices.get(0))).get("delta");
+//                        String content = Dict.of(BeanUtil.beanToMap(delta)).getString("content");
 //                        System.out.print(content);
                     }
                 })
                 .build();
         String command = handlerName + DOT + "chat";
-        ActionUtils.execute(command, req);
+        ActionUtil.execute(command, req);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class OpenAIActionTest {
                 .setInput("this is a test")
                 .build();
         String command = handlerName + DOT + "embeddings";
-        EmbedResponse execute = ActionUtils.execute(command, request);
+        EmbedResponse execute = ActionUtil.execute(command, request);
         log.info("result: {}", JSON.toJSONString(execute, Boolean.TRUE));
     }
 
@@ -108,7 +108,7 @@ public class OpenAIActionTest {
                 .set("input", "This is test speech create! ")
                 ;
         String command = handlerName + DOT + "speechCreate";
-        InputStream execute = ActionUtils.execute(command, args);
+        InputStream execute = ActionUtil.execute(command, args);
         File file = FileUtil.writeFromStream(execute, "F:\\test\\testSpeechCreate.mp3");
         log.info("result: {}", file);
     }
@@ -122,7 +122,7 @@ public class OpenAIActionTest {
                 .set("prompt", "Say this is a test")
                 ;
         String command = handlerName + DOT + "completion";
-        Dict execute = ActionUtils.execute(command, args);
+        Dict execute = ActionUtil.execute(command, args);
         log.info("result: {}", JSON.toJSONString(execute, Boolean.TRUE));
     }
 
@@ -142,14 +142,14 @@ public class OpenAIActionTest {
                 .set("prompt", "A cute baby sea otter. ")
                 ;
         String command = handlerName + DOT + "imageCreate";
-        Dict execute = ActionUtils.execute(command, args);
+        Dict execute = ActionUtil.execute(command, args);
         log.info("result: {}", JSON.toJSONString(execute, Boolean.TRUE));
     }
 
     @Test
     public void testModels() {
         String command = handlerName + DOT + "models";
-        Dict execute = ActionUtils.execute(command, (Object) null);
+        Dict execute = ActionUtil.execute(command, (Object) null);
         log.info("result: {}", JSON.toJSONString(execute, Boolean.TRUE));
     }
 
