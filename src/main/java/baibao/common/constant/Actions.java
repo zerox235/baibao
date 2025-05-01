@@ -17,4 +17,9 @@ public class Actions {
      */
     public static final String IP_QUERY_01 = "ip-api";
 
+
+    public static final String EXCHANGE_RATE_01 = "exchange-rate-api";
+
+    public static final String COUNTRY_CODE_01 = "country-code-baidu";
+
 }
