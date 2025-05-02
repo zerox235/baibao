@@ -20,6 +20,7 @@ public class EnableDTO implements Serializable {
     private Long    recordId;
     /**
      * 启用/禁用状态值：0 未启用，1 启用
+     * @see baibao.common.enums.Enabled
      */
     @NotNull(message = "启用/禁用状态值不能为空！")
     private Integer enabled;

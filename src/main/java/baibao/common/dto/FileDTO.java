@@ -24,6 +24,10 @@ public class FileDTO implements Serializable {
     @NotBlank(message = "文件地址不能为空！")
     private String addr;
     /**
+     * 文件预览地址
+     */
+    private String preview;
+    /**
      * 文件备注
      */
     private String remark;
@@ -55,6 +59,16 @@ public class FileDTO implements Serializable {
     public void setAddr(String addr) {
 
         this.addr = addr;
+    }
+
+    public String getPreview() {
+
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+
+        this.preview = preview;
     }
 
     public String getRemark() {
