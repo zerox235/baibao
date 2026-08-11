@@ -20,3 +20,6 @@
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
            佛祖保佑       永无BUG     永不修改
 ////////////////////////////////////////////////////////////////////
+
+Application: ${spring.application.name} (v${spring.application.version})
+Powered by Spring Boot (v${spring-boot.version})
