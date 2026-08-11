@@ -1,20 +1,37 @@
 package ${serviceImplPackageName};
 
+import baibao.common.enums.QueryMode;
+import baibao.db.jdbc.mybatisplus.base.BaseServiceImpl;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.github.yulichang.toolkit.JoinWrappers;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import kunlun.action.ActionUtil;
+import kunlun.action.event.support.difference.FieldDifferenceBuilder;
 import kunlun.common.Page;
+import kunlun.common.constant.Nil;
+import kunlun.data.Event;
 import kunlun.data.bean.BeanUtil;
+import kunlun.data.fill.classic.DataCfg;
+import kunlun.data.fill.classic.FillCfg;
+import kunlun.data.fill.classic.support.EnumSupplier;
+import kunlun.data.fill.classic.support.MpServIdsSupplier;
 import kunlun.data.validation.support.javax.ValidationUtil;
 import kunlun.data.validation.support.javax.group.Create;
 import kunlun.data.validation.support.javax.group.Query;
 import kunlun.data.validation.support.javax.group.Update;
 import kunlun.exception.util.VerifyUtil;
+import kunlun.io.fileprocessor.ProcConfig;
+import kunlun.io.fileprocessor.ProcResult;
+import kunlun.io.fileprocessor.support.EasyExcelByteArrayBasedExportProcessor;
+import kunlun.io.fileprocessor.support.EasyExcelOneTimeImportProcessor;
 import kunlun.util.PageUtil;
+import kunlun.util.function.difference.FieldCompareResult;
 #if($useLombok)
 import lombok.extern.slf4j.Slf4j;
 #end
@@ -24,28 +41,40 @@ import org.slf4j.LoggerFactory;
 #end
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ${mapperPackageName}.${mapperClassName};
 import ${entityPackageName}.${entityClassName};
-import ${paramPackageName}.${paramClassName};
+import ${addParamPackageName}.${addParamClassName};
+import ${editParamPackageName}.${editParamClassName};
 import ${queryPackageName}.${queryClassName};
 import ${resultPackageName}.${resultClassName};
+import ${smpResultPackageName}.${smpResultClassName};
 import ${servicePackageName}.${serviceClassName};
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static cn.hutool.core.collection.CollUtil.isNotEmpty;
+import static cn.hutool.core.convert.Convert.toBool;
+import static cn.hutool.core.convert.Convert.toStr;
+import static cn.hutool.core.text.CharSequenceUtil.EMPTY;
 import static cn.hutool.core.util.StrUtil.isNotBlank;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
+import static kunlun.common.Errors.*;
 import static kunlun.common.constant.Numbers.ONE;
 import static kunlun.common.constant.Numbers.ZERO;
+import static kunlun.data.validation.support.javax.ValidationUtil.validateToThrow;
+import static kunlun.exception.util.VerifyUtil.*;
+import static kunlun.io.fileprocessor.ProcResult.Statistic;
+import static kunlun.io.fileprocessor.support.EasyExcelByteArrayBasedExportProcessor.ExcelExportContext;
+import static kunlun.io.fileprocessor.support.EasyExcelOneTimeImportProcessor.ExcelImportContext;
 
 /**
  * $!{table.comment}的服务实现类.
@@ -57,166 +86,108 @@ import static kunlun.common.constant.Numbers.ZERO;
 @Slf4j
 #end
 @Service
-public class ${serviceImplClassName} extends MPJBaseServiceImpl<${mapperClassName}, ${entityClassName}>
-        implements ${serviceClassName} {
+public class ${serviceImplClassName} extends BaseServiceImpl<${mapperClassName}, ${entityClassName}
+        , ${addParamClassName}, ${editParamClassName}, ${queryClassName}, ${resultClassName}> implements ${serviceClassName} {
 #if(!$useLombok)
     private static final Logger log = LoggerFactory.getLogger(${serviceImplClassName}.class);
 #end
 
     @Override
-    public boolean existById(Serializable id) {
-        VerifyUtil.notNull(id, "ID不能为空！");
-        return count(Wrappers.lambdaQuery(${entityClassName}.class)
-                .eq(${entityClassName}::getDeleteStatus, ZERO)
-                .in(${entityClassName}::getId, id)
-        ) > ZERO;
+    protected ${entityClassName} fromAddParam(${addParamClassName} param) {
+        // ${entityClassName} entity = BeanUtil.beanToBean(param, ${entityClassName}.class);
+        // return entity;
+        return BeanUtil.beanToBean(param, ${entityClassName}.class);
     }
 
     @Override
-    public boolean existByCode(String code, Serializable id) {
-        VerifyUtil.notBlank(code, "编码不能为空！");
-        return count(Wrappers.lambdaQuery(${entityClassName}.class)
-                .eq(${entityClassName}::getDeleteStatus, ZERO)
-                //.eq(${entityClassName}::getCode, code)
-                .ne(ObjUtil.isNotEmpty(id), ${entityClassName}::getId, id)
-        ) > ZERO;
+    protected ${entityClassName} fromEditParam(${resultClassName} old, ${editParamClassName} param) {
+        // ${entityClassName} entity = BeanUtil.beanToBean(param, ${entityClassName}.class);
+        // return entity;
+        return BeanUtil.beanToBean(param, ${entityClassName}.class);
     }
 
     @Override
-    public Long addRecord(${serviceEntityName}Param param) {
-        // 参数校验
-        ValidationUtil.validateToThrow(param);
+    public Long addRecord(${addParamClassName} param) {
         // 编码校验
         /*if (StrUtil.isNotBlank(param.getCode())) {
-            VerifyUtil.isFalse(existByCode(
-                    param.getCode(), null), "该编码已存在！");
+            isFalse(existBy(${entityClassName}::getCode
+                    , param.getCode(), ${entityClassName}::getId, null), "该编码已存在！");
         }*/
-        // 转换成实体
-        ${entityClassName} entity = BeanUtil.beanToBean(param, ${entityClassName}.class);
-        // 保存$!{table.comment}数据（创建人、更新人会自动填充）
-        VerifyUtil.isTrue(save(entity), "保存失败！");
-        return entity.getId();
+        return super.addRecord(param);
     }
 
     @Override
-    public void editRecord(${serviceEntityName}Param param) {
-        // 参数校验
-        ValidationUtil.validateToThrow(param);
-        // 判断记录是否存在
-        VerifyUtil.isTrue(existById(param.getId()), "记录不存在！");
+    public void editRecord(${editParamClassName} param) {
         // 编码校验
         /*if (StrUtil.isNotBlank(param.getCode())) {
-            VerifyUtil.isFalse(existByCode(
-                    param.getCode(), param.getId()), "该编码已存在！");
+            isFalse(existBy(${entityClassName}::getCode
+                    , param.getCode(), ${entityClassName}::getId, param.getId()), "该编码已存在！");
         }*/
-        // 转换成实体
-        ${entityClassName} entity = BeanUtil.beanToBean(param, ${entityClassName}.class);
-        // 更新$!{table.comment}数据（更新人会自动填充）
-        VerifyUtil.isTrue(updateById(entity), "编辑失败！");
+        super.editRecord(param);
     }
 
-    @Override
-    public void deleteById(Long recordId) {
+    /*@Override
+    public List<${resultClassName}> customQuery(${queryClassName} query) {
         // 参数校验
-        VerifyUtil.notNull(recordId, "记录ID不能为空！");
-        // 删除（已配置逻辑删除）
-        VerifyUtil.isTrue(removeById(recordId), "删除失败！");
-    }
+        validateToThrow(query);
+        // 查询
+        List<${entityClassName}> list = list(buildQueryWrapper(query));
+        // 转换
+        List<${resultClassName}> results = BeanUtil.beanToBeanInList(list, ${resultClassName}.class);
+        // 填充数据
+        processData(query, results);
+        // 返回
+        return results;
+    }*/
+
+    /*@Override
+    public Page<${resultClassName}> queryPage(${queryClassName} query) {
+
+        return super.queryPage(query);
+    }*/
 
     @Override
-    public List<Long> batchAdd(List<${serviceEntityName}Param> params) {
-        // 参数校验
-        VerifyUtil.notEmpty(params, "待批量增加的数据不能为空！");
-        for (${serviceEntityName}Param param : params) {
-            ValidationUtil.validateToThrow(param);
-        }
-        // 转换成实体（中间可能有特殊逻辑）
-        List<${entityClassName}> entityList = new ArrayList<>();
-        for (${serviceEntityName}Param param : params) {
-            ${entityClassName} entity = BeanUtil.beanToBean(param, ${entityClassName}.class);
-            entityList.add(entity);
-        }
-        // 批量保存数据（创建人、更新人会自动填充）
-        VerifyUtil.isTrue(saveBatch(entityList), "批量保存失败！");
-        // 提取Ids
-        return entityList.stream()
-                .map(${entityClassName}::getId).collect(Collectors.toList());
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void batchEdit(List<${serviceEntityName}Param> params) {
-        // 参数校验
-        VerifyUtil.notNull(params, "待批量编辑的数据不能为空！");
-        for (${serviceEntityName}Param param : params) {
-            ValidationUtil.validateToThrow(param);
-        }
-        // 查询旧数据
-        List<String> codes = /*params.stream()
-                .map(${serviceEntityName}Param::getCode).collect(Collectors.toList())*/new ArrayList<>();
-        List<${entityClassName}> oldEntityList =
-                CollUtil.isNotEmpty(codes) ? findByCodes(codes) : emptyList();
-        if (oldEntityList == null) { oldEntityList = emptyList(); }
-        // 转换成Map
-        Map<String, ${entityClassName}> oldEntityMap = oldEntityList.stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toMap(
-                        /*${entityClassName}::getCode*/(item)-> String.valueOf(item.getId()),
-                        Function.identity(),
-                        (k1, k2) -> k2
-                ));
-        // 声明待增加、待编辑、待删除的集合
-        List<${serviceEntityName}Param> willAdd = new ArrayList<>();
-        List<${entityClassName}> willEdit = new ArrayList<>();
-        List<Long> willDelete = new ArrayList<>();
-        // 遍历，区分待增加的和待编辑的（基础：所有数据都是传入的）
-        for (${serviceEntityName}Param param : params) {
-            ${entityClassName} oldEntity = oldEntityMap.get(/*param.getCode()*/null);
-            if (oldEntity != null) {
-                ${entityClassName} entity = BeanUtil.beanToBean(param, ${entityClassName}.class);
-                entity.setId(oldEntity.getId());
-                willEdit.add(entity);
-            } else { willAdd.add(param); }
-        }
-        // 区分待删除的（查询到的 - 当前的）
-        if (CollUtil.isNotEmpty(willEdit)) {
-            List<Long> oldIds = oldEntityList.stream().map(${entityClassName}::getId).collect(Collectors.toList());
-            List<Long> nowIds = willEdit.stream().map(${entityClassName}::getId).collect(Collectors.toList());
-            willDelete.addAll(oldIds);
-            willDelete.removeAll(nowIds);
-        }
-        // 进行批量增加、批量编辑和批量删除
-        if (CollUtil.isNotEmpty(willDelete)) { removeByIds(willDelete); }
-        if (CollUtil.isNotEmpty(willAdd)) { batchAdd(willAdd);}
-        if (CollUtil.isNotEmpty(willEdit)) {
-            VerifyUtil.isTrue(updateBatchById(willEdit), "批量更新失败！");
-        }
-    }
-
-    @Override
-    public ${resultClassName} detailById(Long recordId) {
-        // 参数校验
-        VerifyUtil.notNull(recordId, "记录ID不能为空！");
-        // 查询数据（已经配置逻辑删除了）
-        ${entityClassName} entity = getById(recordId);
-        ${resultClassName} result = BeanUtil.beanToBean(entity, ${resultClassName}.class);
-        // 填充其他信息
-        // 返回结果
+    public ProcResult importRecords(MultipartFile file) {
+        ProcResult result = new ProcConfig<MultipartFile, ${resultClassName}>()
+                .setFileProcessor(new EasyExcelOneTimeImportProcessor(
+                        ${resultClassName}.class, "文件导入.xlsx"))
+                //.setStatusListener(new AsyncTaskPusher<>())
+                //.setOutputSaver(new AsyncTaskSaver<>())
+                .setParam(file)
+                //.setContextConfigurator(context -> {
+                //})
+                .setDataConsumer((context, page) -> {
+                    Statistic statistic = context.getResult().getStatistic();
+                    //statistic.setSuccessCount();
+                    //statistic.setFailureCount();
+                })
+                .execute();
+        log.info("批量导入结果：{}", JSONUtil.toJsonStr(result));
         return result;
     }
 
     @Override
-    public List<${entityClassName}> findByCodes(List<String> codes) {
-        // 参数校验，去重
-        VerifyUtil.notEmpty(codes, "编码集合不能为空！");
-        codes = CollUtil.distinct(codes);
-        // 查询
-        return list(Wrappers.lambdaQuery(${entityClassName}.class)
-                .eq(${entityClassName}::getDeleteStatus, ZERO)
-                //.in(${entityClassName}::getCode, codes)
-        );
+    public ProcResult exportRecords(${queryClassName} query) {
+        ProcResult result = new ProcConfig<${queryClassName}, ${resultClassName}>()
+                .setFileProcessor(new EasyExcelByteArrayBasedExportProcessor(
+                        ${resultClassName}.class, "文件导出.xlsx"))
+                //.setStatusListener(new AsyncTaskPusher<>())
+                //.setOutputSaver(new AsyncTaskSaver<>())
+                .setParam(query)
+                //.setContextConfigurator(context -> {
+                //})
+                .setDataSupplier((context, pageId) -> {
+                    query.setPageNum((Integer) pageId);
+                    query.setPageSize(200);
+                    return queryPage(query);
+                })
+                .execute();
+        log.info("批量导出结果：{}", JSONUtil.toJsonStr(result));
+        return result;
     }
 
+
+    @Override
     protected MPJLambdaWrapper<${entityClassName}> buildQueryWrapper(${queryClassName} query) {
         return JoinWrappers.lambda(${entityClassName}.class)
 #foreach(${column} in ${table.columns})
@@ -244,38 +215,86 @@ public class ${serviceImplClassName} extends MPJBaseServiceImpl<${mapperClassNam
 #end
 #end
 #end
+                // 排序需要增加判断条件 isNull(query.getScrollByAsc())，是为了滚动分页查询而服务的
+                //.orderByDesc(ObjUtil.isNull(query.getScrollByAsc()), ${entityClassName}::getCreateTime)
         ;
     }
 
+
+    /**
+     * 统一的$!{table.comment}数据的处理逻辑
+     */
     @Override
-    public List<${resultClassName}> selectList(${queryClassName} query) {
-        // 参数校验
-        ValidationUtil.validateToThrow(query);
-        // 查询
-        List<${entityClassName}> list = list(buildQueryWrapper(query));
-        // 转换
-        List<${resultClassName}> results = BeanUtil.beanToBeanInList(list, ${resultClassName}.class);
-        // 填充数据
-        //fillOtherData(result);
-        // 返回
-        return results;
+    protected void processData(${queryClassName} qry, List<${resultClassName}> data) {
+        if (CollUtil.isEmpty(data)) { return; }
+        // 判断查询模式
+        List<QueryMode> allow = Arrays.asList(QueryMode.FULL, QueryMode.ONLY_PROCESS);
+        if (nonNull(qry) && nonNull(qry.getQueryMode()) && !allow.contains(qry.getQueryMode())) { return; }
+        // 数据处理
+        data.forEach(item -> {
+        });
+        // 数据提取
+        /*List<Long> idList = data.stream().filter(Objects::nonNull)
+                .map(${resultClassName}::getId)
+                .distinct().collect(Collectors.toList());*/
     }
 
+    /**
+     * 统一的$!{table.comment}数据的填充逻辑
+     */
     @Override
-    public Page<${resultClassName}> queryList(${queryClassName} query) {
-        // 参数校验，默认值处理
-        ValidationUtil.validateToThrow(query);
-        // 分页
-        PageUtil.startPage(query.getPageNum(), query.getPageSize());
-        // 查询
-        List<${entityClassName}> list = list(buildQueryWrapper(query));
-        // 判空+结果处理
-        if (CollUtil.isEmpty(list)) { return Page.of(); }
-        Page<${resultClassName}> result = PageUtil.handleResult(list, ${resultClassName}.class);
-        // 填充数据
-        //fillOtherData(result);
-        // 返回
-        return result;
+    protected void fillingData(${queryClassName} qry, List<${resultClassName}> data) {
+        if (CollUtil.isEmpty(data)) { return; }
+        // 判断查询模式
+        List<QueryMode> allow = Arrays.asList(QueryMode.FULL, QueryMode.ONLY_FILL);
+        if (nonNull(qry) && nonNull(qry.getQueryMode()) && !allow.contains(qry.getQueryMode())) { return; }
+        // 数据填充
+        /*FillCfg.of(data).addDataConfig(DataCfg.of(MpServIdsSupplier.of(UserService.class, User::getId))
+                .addFieldConfig("userId", "userName", "name")
+        ).addDataConfig(DataCfg.of(MpServIdsSupplier.of(CompanyService.class, Company::getId))
+                .addFieldConfig("companyId", "companyName", "name")
+        ).addDataConfig(DataCfg.of(EnumSupplier.of(${entityClassName}Status.class))
+                .addFieldConfig("status", "statusTxt", "description")
+        ).fill();*/
+    }
+
+
+    /**
+     * 记录数据的变动日志.
+     * @param bizId 业务数据的主键ID
+     * @param newData 改动后的业务数据对象
+     * @param oldData 改动前的业务数据对象
+     * @param targetClz 目标类型
+     * @param arguments 留有的额外的口子，用于灵活的传递其他参数
+     *                  在大部分场景下，arguments[0] = String methodLabel
+     *                                arguments[1] = boolean ignoreNullNewValue
+     */
+    @Override
+    protected void changeLog(Object bizId, Object oldData, Object newData, Class<?> targetClz, Object... arguments) {
+        /*boolean ignoreNullNewValue = toBool(ArrayUtil.get(arguments, ONE), Boolean.FALSE);
+        String methodLabel = toStr(ArrayUtil.get(arguments, ZERO), EMPTY);
+        ActionUtil.execute(Event.ofChangeLog()
+                //.setBusinessType(null)
+                .setBusinessId(bizId)
+                .appendMessage(new FieldDifferenceBuilder(oldData, newData, targetClz, ignoreNullNewValue) {
+                    @Override
+                    protected void preProcess(List<FieldCompareResult> results) {
+                        for (FieldCompareResult result : results) {
+                            if (result == null) { continue; }
+//                            if ("type".equals(result.getName())) {
+//                                BizType oldVal = BizType.parse(result.getOldValue());
+//                                BizType newVal = BizType.parse(result.getNewValue());
+//                                result.setOldValue(nonNull(oldVal) ? oldVal.getDescription() : null);
+//                                result.setNewValue(nonNull(newVal) ? newVal.getDescription() : null);
+//                                FillCfg.of(result).addDataConfig(DataCfg.of(EnumSupplier.of(BizType.class))
+//                                        .addFieldConfig("oldValue", "oldValue", "description")
+//                                        .addFieldConfig("newValue", "newValue", "description")
+//                                ).fill();
+//                            }
+                        }
+                    }
+                })
+        );*/
     }
 
 }

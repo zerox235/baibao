@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 #if($useLombok)
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 #end
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ import ${javaType};
  */
 #if($useLombok)
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 #end
 @TableName("${table.name}")

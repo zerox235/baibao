@@ -1,20 +1,20 @@
-package ${resultPackageName};
+package ${addParamPackageName};
 
-import com.alibaba.excel.annotation.ExcelIgnore;
-import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
-import com.alibaba.excel.annotation.ExcelProperty;
+import kunlun.core.annotation.FieldMeta;
 #if($useLombok)
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 #end
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 #foreach(${javaType} in ${table.javaTypeImports})
 import ${javaType};
 #end
 
 /**
- * $!{table.comment}的结果对象.
+ * $!{table.comment}的新增操作的入参对象.
  *
  * @author $!{author}
  * @since $!{nowDate}
@@ -23,15 +23,20 @@ import ${javaType};
 @Data
 @NoArgsConstructor
 #end
-@ExcelIgnoreUnannotated
-public class ${resultClassName} implements Serializable {
+public class ${addParamClassName} implements Serializable {
 
-    // region ======== 区域 ========// endregion
 #foreach(${column} in ${table.columns})
     /**
      * $!{column.comment}
      */
-    @ExcelProperty("$!{column.comment}")
+#if(!$!column.nullable)
+#if($column.javaType=="String")
+    @NotBlank(message = "$!{column.comment}不能为空")
+#else
+    @NotNull(message = "$!{column.comment}不能为空")
+#end
+#end
+    @FieldMeta(description = "$!{column.comment}")
     private ${column.javaType} ${column.fieldName};
 #end
 #if(!$useLombok)
@@ -51,7 +56,7 @@ public class ${resultClassName} implements Serializable {
 
     @Override
     public String toString() {
-        return "${resultClassName}{" +
+        return "${paramClassName}{" +
 #set($temp = 0)#foreach(${column} in ${table.columns})
                 "#if($temp > 0), #end#set($temp = $temp + 1)${column.fieldName}='" + ${column.fieldName} + '\'' +
 #end

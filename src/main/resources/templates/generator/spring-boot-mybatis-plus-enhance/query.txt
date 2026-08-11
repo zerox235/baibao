@@ -1,7 +1,13 @@
 package ${queryPackageName};
 
+import baibao.common.dto.base.BaseQuery;
+import kunlun.data.json.support.jackson.annotation.JsonSceneDeserialize;
+import kunlun.data.json.support.jackson.model.Scene;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 #if($useLombok)
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 #end
 import java.io.Serializable;
@@ -18,17 +24,10 @@ import ${javaType};
  */
 #if($useLombok)
 @Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 #end
-public class ${queryClassName} implements Serializable {
-
-    /**
-     * 页码
-     */
-    private Integer pageNum;
-    /**
-     * 每页条数
-     */
-    private Integer pageSize;
+public class ${queryClassName} extends BaseQuery implements Serializable {
 
 
 #foreach(${column} in ${table.columns})
@@ -43,6 +42,7 @@ public class ${queryClassName} implements Serializable {
     /**
      * $!{column.comment}
      */
+    @JsonSceneDeserialize(Scene.SINGLE_TO_LIST)
     private List<${column.javaType}> ${column.fieldName}List;
 #elseif($curColumnComment.contains('name')
             or $curColumnComment.contains('名称')

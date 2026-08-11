@@ -1,7 +1,9 @@
-package ${paramPackageName};
+package ${editParamPackageName};
 
+import kunlun.core.annotation.FieldMeta;
 #if($useLombok)
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 #end
 import javax.validation.constraints.NotBlank;
@@ -12,15 +14,16 @@ import ${javaType};
 #end
 
 /**
- * $!{table.comment}的入参对象.
+ * $!{table.comment}的编辑操作的入参对象.
  *
  * @author $!{author}
  * @since $!{nowDate}
  */
 #if($useLombok)
 @Data
+@NoArgsConstructor
 #end
-public class ${paramClassName} implements Serializable {
+public class ${editParamClassName} implements Serializable {
 
 #foreach(${column} in ${table.columns})
     /**
@@ -33,6 +36,7 @@ public class ${paramClassName} implements Serializable {
     @NotNull(message = "$!{column.comment}不能为空")
 #end
 #end
+    @FieldMeta(description = "$!{column.comment}")
     private ${column.javaType} ${column.fieldName};
 #end
 #if(!$useLombok)
