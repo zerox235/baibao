@@ -5,6 +5,10 @@
 
 package baibao.common.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -12,6 +16,9 @@ import java.io.Serializable;
  * 启用/禁用的传输对象.
  * @author Kahle
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EnableDTO implements Serializable {
     /**
      * 数据记录ID
@@ -25,40 +32,4 @@ public class EnableDTO implements Serializable {
     @NotNull(message = "启用/禁用状态值不能为空！")
     private Integer enabled;
 
-    public EnableDTO(Long recordId, Integer enabled) {
-        this.recordId = recordId;
-        this.enabled = enabled;
-    }
-
-    public EnableDTO() {
-
-    }
-
-    public Long getRecordId() {
-
-        return recordId;
-    }
-
-    public void setRecordId(Long recordId) {
-
-        this.recordId = recordId;
-    }
-
-    public Integer getEnabled() {
-
-        return enabled;
-    }
-
-    public void setEnabled(Integer enabled) {
-
-        this.enabled = enabled;
-    }
-
-    @Override
-    public String toString() {
-        return "EnableDTO{" +
-                "recordId=" + recordId +
-                ", enabled=" + enabled +
-                '}';
-    }
 }

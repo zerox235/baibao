@@ -5,7 +5,11 @@
 
 package baibao.common.dto.base;
 
+import baibao.common.enums.QueryMode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import kunlun.common.Page;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -13,63 +17,30 @@ import java.io.Serializable;
  * 基础的查询对象.
  * @author Kahle
  */
-public abstract class BaseQuery implements Serializable {
+@Data
+@EqualsAndHashCode(callSuper = true)
+public abstract class BaseQuery extends Page.Query implements Serializable {
+
     /**
-     * 是否分页
+     * 查询模式
+     * @see QueryMode
      */
     @JsonIgnore
-    private boolean paged = true;
-    /**
-     * 滚动 ID
-     */
-    private String  scrollId;
-    /**
-     * 页码
-     */
-    private Integer pageNum;
-    /**
-     * 每页条数
-     */
-    private Integer pageSize;
+    private QueryMode queryMode = QueryMode.FULL;
 
+
+    @JsonIgnore
+    @Override
     public boolean isPaged() {
 
-        return paged;
+        return super.isPaged();
     }
 
+    @JsonIgnore
+    @Override
     public void setPaged(boolean paged) {
 
-        this.paged = paged;
-    }
-
-    public String getScrollId() {
-
-        return scrollId;
-    }
-
-    public void setScrollId(String scrollId) {
-
-        this.scrollId = scrollId;
-    }
-
-    public Integer getPageNum() {
-
-        return pageNum;
-    }
-
-    public void setPageNum(Integer pageNum) {
-
-        this.pageNum = pageNum;
-    }
-
-    public Integer getPageSize() {
-
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-
-        this.pageSize = pageSize;
+        super.setPaged(paged);
     }
 
 }

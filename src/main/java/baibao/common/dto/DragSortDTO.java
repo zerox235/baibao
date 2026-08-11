@@ -5,6 +5,10 @@
 
 package baibao.common.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -12,6 +16,9 @@ import java.io.Serializable;
  * 拖拽排序的传输对象.
  * @author Kahle
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DragSortDTO implements Serializable {
 
     /**
@@ -24,32 +31,4 @@ public class DragSortDTO implements Serializable {
      */
     private Long sort;
 
-    public DragSortDTO(Long id, Long sort) {
-        this.sort = sort;
-        this.id = id;
-    }
-
-    public DragSortDTO() {
-
-    }
-
-    public Long getId() {
-
-        return id;
-    }
-
-    public void setId(Long id) {
-
-        this.id = id;
-    }
-
-    public Long getSort() {
-
-        return sort;
-    }
-
-    public void setSort(Long sort) {
-
-        this.sort = sort;
-    }
 }

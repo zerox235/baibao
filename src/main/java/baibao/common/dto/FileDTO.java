@@ -5,13 +5,18 @@
 
 package baibao.common.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
  * 文件的传输对象.
- * @author Kahle
+ * @author Zerox
  */
+@Data
+@NoArgsConstructor
 public class FileDTO implements Serializable {
     /**
      * 文件名称
@@ -37,56 +42,4 @@ public class FileDTO implements Serializable {
         this.addr = addr;
     }
 
-    public FileDTO() {
-
-    }
-
-    public String getName() {
-
-        return name;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
-    }
-
-    public String getAddr() {
-
-        return addr;
-    }
-
-    public void setAddr(String addr) {
-
-        this.addr = addr;
-    }
-
-    public String getPreview() {
-
-        return preview;
-    }
-
-    public void setPreview(String preview) {
-
-        this.preview = preview;
-    }
-
-    public String getRemark() {
-
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-
-        this.remark = remark;
-    }
-
-    @Override
-    public String toString() {
-        return "FileDTO{" +
-                "name='" + name + '\'' +
-                ", addr='" + addr + '\'' +
-                ", remark='" + remark + '\'' +
-                '}';
-    }
 }
