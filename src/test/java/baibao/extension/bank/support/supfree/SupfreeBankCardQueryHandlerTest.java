@@ -5,7 +5,7 @@ import baibao.extension.bank.BankCardQuery;
 import com.alibaba.fastjson.JSON;
 import kunlun.action.ActionUtil;
 import kunlun.data.json.JsonUtil;
-import kunlun.data.json.support.FastJsonHandler;
+import kunlun.data.json.support.FastJsonProcessor;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ public class SupfreeBankCardQueryHandlerTest {
 
     @Test
     public void test1() {
-        JsonUtil.registerHandler("default", new FastJsonHandler());
+        JsonUtil.registerProcessor(JsonUtil.getDefaultProcessorName(), new FastJsonProcessor());
         ActionUtil.registerAction(BANK_CARD_NAME, new SupfreeBankCardAction());
 
         BankCardQuery cardQuery = new BankCardQuery("622600687501042806");

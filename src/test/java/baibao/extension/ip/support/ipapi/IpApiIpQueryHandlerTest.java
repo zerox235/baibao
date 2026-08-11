@@ -7,7 +7,7 @@ import kunlun.cache.support.SimpleCache;
 import kunlun.cache.support.SimpleCacheConfig;
 import kunlun.data.ReferenceType;
 import kunlun.data.json.JsonUtil;
-import kunlun.data.json.support.FastJsonHandler;
+import kunlun.data.json.support.FastJsonProcessor;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class IpApiIpQueryHandlerTest {
     private static final String IP_QUERY_NAME = "ip-query-ipapi";
 
     static {
-        JsonUtil.registerHandler(JsonUtil.getDefaultHandlerName(), new FastJsonHandler());
+        JsonUtil.registerProcessor(JsonUtil.getDefaultProcessorName(), new FastJsonProcessor());
         IpApiIpLocationAction action = new IpApiIpLocationAction();
         action.setCache(new SimpleCache(new SimpleCacheConfig(ReferenceType.SOFT, 3L, TimeUnit.DAYS)));
 

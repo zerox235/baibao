@@ -8,7 +8,7 @@ import kunlun.ai.model.EmbedRequest;
 import kunlun.ai.model.EmbedResponse;
 import kunlun.core.function.Consumer;
 import kunlun.data.json.JsonUtil;
-import kunlun.data.json.support.FastJsonHandler;
+import kunlun.data.json.support.FastJsonProcessor;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class AliYunQwenAIActionTest {
     private static final String chatModel = "qwen-max-0919";
 
     static {
-        JsonUtil.registerHandler("default", new FastJsonHandler());
+        JsonUtil.registerProcessor(JsonUtil.getDefaultProcessorName(), new FastJsonProcessor());
         ActionUtil.registerAction(handlerName, new AbstractAliYunQwenAIAction() {
             @Override
             protected Config getConfig(String strategy, Object input) {

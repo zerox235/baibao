@@ -7,7 +7,7 @@ import kunlun.ai.model.*;
 import kunlun.core.function.Consumer;
 import kunlun.data.Dict;
 import kunlun.data.json.JsonUtil;
-import kunlun.data.json.support.FastJsonHandler;
+import kunlun.data.json.support.FastJsonProcessor;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class AzureOpenAIActionTest {
     private static final String chatModel = "gpt-4";
 
     static {
-        JsonUtil.registerHandler("default", new FastJsonHandler());
+        JsonUtil.registerProcessor(JsonUtil.getDefaultProcessorName(), new FastJsonProcessor());
         ActionUtil.registerAction(handlerName, new AbstractAzureOpenAIAction() {
             @Override
             protected Config getConfig(String strategy, Object input) {

@@ -4,7 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import kunlun.data.Dict;
 import kunlun.data.json.JsonUtil;
-import kunlun.data.json.support.FastJsonHandler;
+import kunlun.data.json.support.FastJsonProcessor;
 import kunlun.generator.id.IdUtil;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class PineconeVectorDbHandlerTest {
 
     static {
 
-        JsonUtil.registerHandler("default", new FastJsonHandler());
+        JsonUtil.registerProcessor(JsonUtil.getDefaultProcessorName(), new FastJsonProcessor());
     }
 
     @Test

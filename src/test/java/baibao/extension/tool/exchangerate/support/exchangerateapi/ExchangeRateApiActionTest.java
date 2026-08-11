@@ -5,7 +5,7 @@ import baibao.extension.tool.exchangerate.ExchangeRateQuery;
 import cn.hutool.json.JSONUtil;
 import kunlun.action.ActionUtil;
 import kunlun.data.json.JsonUtil;
-import kunlun.data.json.support.FastJsonHandler;
+import kunlun.data.json.support.FastJsonProcessor;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ public class ExchangeRateApiActionTest {
     private static final String EXCHANGE_RATE_NAME = "exchangerate-api";
 
     static {
-        JsonUtil.registerHandler(JsonUtil.getDefaultHandlerName(), new FastJsonHandler());
+        JsonUtil.registerProcessor(JsonUtil.getDefaultProcessorName(), new FastJsonProcessor());
         ActionUtil.registerAction(EXCHANGE_RATE_NAME, new ExchangeRateApiAction());
         ActionUtil.registerShortcut(ExchangeRateQuery.class, EXCHANGE_RATE_NAME);
     }

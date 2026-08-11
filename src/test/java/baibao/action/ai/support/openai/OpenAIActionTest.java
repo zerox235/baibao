@@ -10,7 +10,7 @@ import kunlun.ai.model.EmbedResponse;
 import kunlun.core.function.Consumer;
 import kunlun.data.Dict;
 import kunlun.data.json.JsonUtil;
-import kunlun.data.json.support.FastJsonHandler;
+import kunlun.data.json.support.FastJsonProcessor;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class OpenAIActionTest {
     private static final String chatModel = "gpt-3.5-turbo-0613";
 
     static {
-        JsonUtil.registerHandler("default", new FastJsonHandler());
+        JsonUtil.registerProcessor(JsonUtil.getDefaultProcessorName(), new FastJsonProcessor());
         ActionUtil.registerAction(handlerName, new AbstractOpenAIAction() {
             @Override
             protected Config getConfig(String strategy, Object input) {

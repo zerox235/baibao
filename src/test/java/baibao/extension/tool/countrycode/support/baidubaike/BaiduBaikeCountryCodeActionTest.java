@@ -5,7 +5,7 @@ import baibao.extension.tool.countrycode.CountryCodeQuery;
 import cn.hutool.json.JSONUtil;
 import kunlun.action.ActionUtil;
 import kunlun.data.json.JsonUtil;
-import kunlun.data.json.support.FastJsonHandler;
+import kunlun.data.json.support.FastJsonProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class BaiduBaikeCountryCodeActionTest {
     private static final String COUNTRY_CODE_NAME = "country-code";
 
     static {
-        JsonUtil.registerHandler(JsonUtil.getDefaultHandlerName(), new FastJsonHandler());
+        JsonUtil.registerProcessor(JsonUtil.getDefaultProcessorName(), new FastJsonProcessor());
         ActionUtil.registerAction(COUNTRY_CODE_NAME, new BaiduBaikeCountryCodeAction());
         ActionUtil.registerShortcut(CountryCodeQuery.class, COUNTRY_CODE_NAME);
     }
